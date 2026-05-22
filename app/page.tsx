@@ -1,65 +1,151 @@
-import Image from "next/image";
+import { Code, Target, TrendingUp } from "lucide-react";
+import { Predictor } from "@/components/predictor";
+import { FeaturedSection } from "@/components/featured-section";
+import { Button } from "@/components/ui/button";
+import meta from "@/data/meta.json";
+import { formatSeason } from "@/lib/types";
+
+const GITHUB_URL = "https://github.com/brysonhen/soccer_matchup_predictor";
+
+const HERO_STATS = [
+  { value: "6", label: "PL seasons" },
+  { value: meta.totalMatches.toLocaleString(), label: "matches analysed" },
+  { value: `${Math.round(meta.metrics.model_accuracy * 100)}%`, label: "test accuracy" },
+  { value: meta.teamCount.toString(), label: "clubs covered" },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+    <>
+      {/* Nav */}
+      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
+          <div className="flex items-center gap-2 font-semibold">
+            <Target className="h-5 w-5 text-primary" />
+            <span>Matchup Predictor</span>
+          </div>
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+            <Code className="h-4 w-4" />
+            <span className="hidden sm:inline">Source</span>
           </a>
         </div>
+      </header>
+
+      <main className="flex-1">
+        {/* Hero */}
+        <section className="relative overflow-hidden">
+          <div
+            className="pointer-events-none absolute inset-0 -z-10"
+            style={{
+              background:
+                "radial-gradient(60% 50% at 50% 0%, color-mix(in oklch, var(--primary) 16%, transparent), transparent)",
+            }}
+          />
+          <div className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                Form data through{" "}
+                {new Date(meta.lastMatchDate).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </div>
+
+              <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-6xl">
+                Premier League{" "}
+                <span className="text-primary">Matchup Predictor</span>
+              </h1>
+
+              <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
+                A machine learning model that estimates pre-match win
+                probabilities for any Premier League fixture, using nothing but
+                each team&apos;s recent form.
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <Button asChild size="lg" className="font-semibold">
+                  <a href="#predictor">
+                    <TrendingUp className="h-4 w-4" />
+                    Try the predictor
+                  </a>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
+                    <Code className="h-4 w-4" />
+                    View the code
+                  </a>
+                </Button>
+              </div>
+
+              <dl className="mx-auto mt-14 grid max-w-2xl grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
+                {HERO_STATS.map((s) => (
+                  <div key={s.label} className="bg-card px-4 py-5 text-center">
+                    <dt className="text-2xl font-bold tabular-nums">{s.value}</dt>
+                    <dd className="mt-1 text-xs text-muted-foreground">
+                      {s.label}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        </section>
+
+        {/* Predictor */}
+        <section className="mx-auto max-w-3xl px-6 pb-20">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold tracking-tight">
+              Pick a fixture
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Choose a home and away team to see the model&apos;s prediction,
+              the factors behind it, and how the clubs have fared before.
+            </p>
+          </div>
+          <Predictor />
+        </section>
+
+        {/* Featured section */}
+        <FeaturedSection />
       </main>
-    </div>
+
+      {/* Footer */}
+      <footer className="border-t border-border bg-background">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground sm:flex-row">
+          <p>
+            Built by Bryson Henderson · Match data from{" "}
+            <a
+              href="https://www.football-data.co.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              football-data.co.uk
+            </a>
+          </p>
+          <div className="flex items-center gap-4">
+            <span>
+              Trained on {meta.trainSeasons.map(formatSeason).join(", ")}
+            </span>
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-foreground"
+            >
+              <Code className="h-4 w-4" />
+              GitHub
+            </a>
+          </div>
+        </div>
+      </footer>
+    </>
   );
 }
