@@ -9,7 +9,7 @@ import {
 import { TeamMap } from "@/components/team-map";
 import { AccuracyChart } from "@/components/accuracy-chart";
 import meta from "@/data/meta.json";
-import { logoUrl } from "@/lib/types";
+import { logoUrl, formatSeason } from "@/lib/types";
 import teamsData from "@/data/teams.json";
 import type { TeamMeta } from "@/lib/types";
 
@@ -137,7 +137,7 @@ export function FeaturedSection() {
               label="Model performance"
             />
             <h3 className="mt-3 text-xl font-semibold">
-              Accuracy through the 2025/26 season.{" "}
+              Accuracy through the {formatSeason(meta.testSeasons[0])} season.{" "}
               <span className="font-normal text-muted-foreground">
                 Tested on a full season the model never saw in training.
               </span>
