@@ -224,14 +224,21 @@ class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
             length = int(self.headers.get("Content-Length", 0))
-            raw = self.rfile.read(length).decode() if length else "{}"
+            if length > 4096:
+                self._send(413, {"error": "Request too large"})
+                return
+            raw = self.rfile.read(length).decode("utf-8", errors="ignore") if length else "{}"
             payload = json.loads(raw)
-            result = compute_prediction(payload.get("home"), payload.get("away"))
+            home = str(payload.get("home", ""))[:64]
+            away = str(payload.get("away", ""))[:64]
+            result = compute_prediction(home, away)
             self._send(200, result)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            self._send(400, {"error": "Invalid request body"})
         except ValueError as exc:
             self._send(400, {"error": str(exc)})
-        except Exception as exc:  # noqa: BLE001
-            self._send(500, {"error": f"Prediction failed: {exc}"})
+        except Exception:  # noqa: BLE001
+            self._send(500, {"error": "Prediction failed"})
 
 
 if __name__ == "__main__":

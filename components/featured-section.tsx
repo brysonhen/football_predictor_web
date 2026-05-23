@@ -1,10 +1,9 @@
 import {
   Activity,
-  ArrowUpRight,
   GalleryVerticalEnd,
   MapPin,
   ShieldCheck,
-  Sparkles,
+  Eye,
 } from "lucide-react";
 import { TeamMap } from "@/components/team-map";
 import { AccuracyChart } from "@/components/accuracy-chart";
@@ -156,7 +155,7 @@ export function FeaturedSection() {
               description="Every feature uses only matches played before kickoff. Training and test seasons never overlap."
             />
             <FeatureCard
-              icon={<Sparkles className="h-4 w-4" />}
+              icon={<Eye className="h-4 w-4" />}
               label="Transparency"
               title="No black box."
               description="Each prediction breaks down the exact form stats that drove it, in plain English."
@@ -180,17 +179,12 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="relative flex flex-col gap-2 border-border p-6 [&:not(:last-child)]:border-b sm:[&:not(:last-child)]:border-b-0 sm:[&:not(:last-child)]:border-r">
+    <div className="flex flex-col gap-2 border-border p-6 [&:not(:last-child)]:border-b sm:[&:not(:last-child)]:border-b-0 sm:[&:not(:last-child)]:border-r">
       <QuadrantHeader icon={icon} label={label} />
-      <h3 className="mt-2 text-lg font-semibold">
+      <p className="mt-2 text-base font-semibold leading-snug">
         {title}{" "}
         <span className="font-normal text-muted-foreground">{description}</span>
-      </h3>
-      <div className="mt-auto pt-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary">
-          <ArrowUpRight className="h-4 w-4" />
-        </div>
-      </div>
+      </p>
     </div>
   );
 }
