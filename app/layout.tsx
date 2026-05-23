@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = "https://soccerpredictorweb.vercel.app";
+const SITE_URL = "https://footballpredictorweb.vercel.app";
 
 export const metadata: Metadata = {
   title: "Premier League Matchup Predictor",
