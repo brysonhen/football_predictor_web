@@ -48,17 +48,7 @@ export default function Home() {
           />
           <div className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
             <div className="mx-auto max-w-3xl text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Form data through{" "}
-                {new Date(meta.lastMatchDate).toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </div>
-
-              <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-6xl">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
                 Premier League{" "}
                 <span className="text-primary">Matchup Predictor</span>
               </h1>

@@ -3,11 +3,13 @@
 import { useState } from "react";
 import DottedMap from "dotted-map";
 import teamsData from "@/data/teams.json";
+import { logoUrl } from "@/lib/types";
 import type { TeamMeta } from "@/lib/types";
 
-const REGION = { lat: { min: 49.9, max: 55.9 }, lng: { min: -6.4, max: 1.9 } };
+// Focused on England — enough headroom to show Scotland/Wales coastline for context
+const REGION = { lat: { min: 49.9, max: 55.9 }, lng: { min: -5.8, max: 2.0 } };
 
-const map = new DottedMap({ height: 60, grid: "diagonal", region: REGION });
+const map = new DottedMap({ height: 90, grid: "diagonal", region: REGION });
 const bgPoints = map.getPoints();
 
 const teams = Object.values(teamsData) as TeamMeta[];
@@ -27,67 +29,100 @@ const minX = Math.min(...allX);
 const maxX = Math.max(...allX);
 const minY = Math.min(...allY);
 const maxY = Math.max(...allY);
-const PAD = 2.5;
-const viewBox = `${minX - PAD} ${minY - PAD} ${maxX - minX + PAD * 2} ${
-  maxY - minY + PAD * 2
-}`;
+const PAD = 2;
+const VW = maxX - minX + PAD * 2;
+const VH = maxY - minY + PAD * 2;
+
+function toPercent(pin: Pin) {
+  return {
+    left: ((pin.x - (minX - PAD)) / VW) * 100,
+    top: ((pin.y - (minY - PAD)) / VH) * 100,
+  };
+}
 
 export function TeamMap() {
   const [hovered, setHovered] = useState<Pin | null>(null);
 
   return (
-    <div className="relative w-full">
-      <svg viewBox={viewBox} className="w-full h-auto">
+    <div className="relative w-full select-none">
+      {/* Dotted map — England/Wales outline */}
+      <svg
+        viewBox={`${minX - PAD} ${minY - PAD} ${VW} ${VH}`}
+        className="w-full h-auto"
+        aria-hidden="true"
+      >
         {bgPoints.map((point, i) => (
           <circle
             key={i}
             cx={point.x}
             cy={point.y}
-            r={0.32}
-            className="fill-muted-foreground/25"
+            r={0.26}
+            className="fill-muted-foreground/18"
           />
         ))}
-
-        {pins.map((pin, i) => {
-          const active = hovered?.team.name === pin.team.name;
-          return (
-            <g key={pin.team.name}>
-              {active && (
-                <circle
-                  cx={pin.x}
-                  cy={pin.y}
-                  r={2.2}
-                  className="fill-primary/25"
-                />
-              )}
-              <circle
-                cx={pin.x}
-                cy={pin.y}
-                r={active ? 1.15 : 0.85}
-                className="fill-primary cursor-pointer transition-all"
-                style={{ animationDelay: `${i * 35}ms` }}
-                onMouseEnter={() => setHovered(pin)}
-                onMouseLeave={() => setHovered(null)}
-              />
-            </g>
-          );
-        })}
       </svg>
 
-      {hovered && (
-        <div
-          className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs shadow-lg"
-          style={{
-            left: `${((hovered.x - minX + PAD) / (maxX - minX + PAD * 2)) * 100}%`,
-            top: `${((hovered.y - minY + PAD) / (maxY - minY + PAD * 2)) * 100}%`,
-          }}
-        >
-          <div className="font-semibold text-foreground">
-            {hovered.team.name}
+      {/* Team logo pins — positioned absolutely over the SVG */}
+      {pins.map((pin) => {
+        const pos = toPercent(pin);
+        const active = hovered?.team.name === pin.team.name;
+        return (
+          <div
+            key={pin.team.name}
+            className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+            style={{
+              left: `${pos.left}%`,
+              top: `${pos.top}%`,
+              zIndex: active ? 20 : 10,
+            }}
+            onMouseEnter={() => setHovered(pin)}
+            onMouseLeave={() => setHovered(null)}
+          >
+            <div
+              className={`flex items-center justify-center rounded-full transition-all duration-150 ${
+                active
+                  ? "scale-[1.7] ring-1 ring-primary ring-offset-1 ring-offset-card bg-card/95 shadow-lg p-[3px]"
+                  : "bg-card/80 p-[2px] shadow hover:scale-125 hover:bg-card"
+              }`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={logoUrl(pin.team.logoId)}
+                alt={pin.team.name}
+                width={14}
+                height={14}
+                style={{ width: 14, height: 14 }}
+                className="object-contain"
+                loading="lazy"
+              />
+            </div>
           </div>
-          <div className="text-muted-foreground">{hovered.team.stadium}</div>
-        </div>
-      )}
+        );
+      })}
+
+      {/* Tooltip */}
+      {hovered && (() => {
+        const pos = toPercent(hovered);
+        const nearTop = pos.top < 18;
+        return (
+          <div
+            className="pointer-events-none absolute z-30 -translate-x-1/2 rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs shadow-lg"
+            style={{
+              left: `${pos.left}%`,
+              ...(nearTop
+                ? { top: `calc(${pos.top}% + 22px)` }
+                : { top: `calc(${pos.top}% - 38px)` }),
+            }}
+          >
+            <div className="font-semibold text-foreground whitespace-nowrap">
+              {hovered.team.name}
+            </div>
+            <div className="text-muted-foreground whitespace-nowrap">
+              {hovered.team.stadium}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

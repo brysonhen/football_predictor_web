@@ -2,8 +2,8 @@ import {
   Activity,
   GalleryVerticalEnd,
   MapPin,
-  ShieldCheck,
-  Eye,
+  BarChart3,
+  Layers,
 } from "lucide-react";
 import { TeamMap } from "@/components/team-map";
 import { AccuracyChart } from "@/components/accuracy-chart";
@@ -46,6 +46,12 @@ function QuadrantHeader({
 
 export function FeaturedSection() {
   const recent = meta.recentResults.slice(0, 6);
+
+  // Log-loss improvement over the majority-class baseline (lower is better)
+  const baseline = meta.metrics.dummy_log_loss;
+  const model = meta.metrics.model_log_loss;
+  const improvement = Math.round(((baseline - model) / baseline) * 100);
+  const accuracy = Math.round(meta.metrics.model_accuracy * 100);
 
   return (
     <section className="border-t border-border bg-background py-20 sm:py-24">
@@ -146,45 +152,72 @@ export function FeaturedSection() {
             </div>
           </div>
 
-          {/* 4. Feature cards */}
+          {/* 4. Stats cards */}
           <div className="grid bg-card sm:grid-cols-2">
-            <FeatureCard
-              icon={<ShieldCheck className="h-4 w-4" />}
-              label="Data integrity"
-              title="No leakage."
-              description="Every feature uses only matches played before kickoff. Training and test seasons never overlap."
-            />
-            <FeatureCard
-              icon={<Eye className="h-4 w-4" />}
-              label="Transparency"
-              title="No black box."
-              description="Each prediction breaks down the exact form stats that drove it, in plain English."
-            />
+            {/* Card A: model vs baseline */}
+            <div className="flex flex-col gap-3 border-border p-6 [&:not(:last-child)]:border-b sm:[&:not(:last-child)]:border-b-0 sm:[&:not(:last-child)]:border-r">
+              <QuadrantHeader
+                icon={<BarChart3 className="h-4 w-4" />}
+                label="Beats the baseline"
+              />
+              <p className="mt-1 text-base font-semibold leading-snug">
+                {accuracy}% test accuracy.{" "}
+                <span className="font-normal text-muted-foreground">
+                  {improvement}% lower log-loss than a naive majority-class
+                  baseline, across {meta.totalMatches.toLocaleString()} matches.
+                </span>
+              </p>
+              <div className="mt-auto grid grid-cols-2 gap-2 pt-2">
+                <div className="rounded-lg border border-border bg-background px-3 py-2 text-center">
+                  <div className="text-lg font-bold tabular-nums text-primary">
+                    {accuracy}%
+                  </div>
+                  <div className="text-[10px] text-muted-foreground">ML model</div>
+                </div>
+                <div className="rounded-lg border border-border bg-background px-3 py-2 text-center">
+                  <div className="text-lg font-bold tabular-nums">
+                    {Math.round(
+                      (meta.confusionMatrix[0][0] /
+                        meta.confusionMatrix[0].reduce((a, b) => a + b, 0)) *
+                        100
+                    )}%
+                  </div>
+                  <div className="text-[10px] text-muted-foreground">Home-win baseline</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card B: feature breakdown */}
+            <div className="flex flex-col gap-3 p-6">
+              <QuadrantHeader
+                icon={<Layers className="h-4 w-4" />}
+                label="12 inputs"
+              />
+              <p className="mt-1 text-base font-semibold leading-snug">
+                6 form stats, doubled.{" "}
+                <span className="font-normal text-muted-foreground">
+                  Each feature is computed independently for home and away,
+                  giving the model a full picture of both sides.
+                </span>
+              </p>
+              <ul className="mt-auto space-y-1 pt-2 text-xs text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <span className="h-1 w-1 rounded-full bg-primary" />
+                  Points per game (last 5 and 10 matches)
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-1 w-1 rounded-full bg-primary" />
+                  Goals scored and conceded per game
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-1 w-1 rounded-full bg-primary" />
+                  Days since last match (fatigue proxy)
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function FeatureCard({
-  icon,
-  label,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="flex flex-col gap-2 border-border p-6 [&:not(:last-child)]:border-b sm:[&:not(:last-child)]:border-b-0 sm:[&:not(:last-child)]:border-r">
-      <QuadrantHeader icon={icon} label={label} />
-      <p className="mt-2 text-base font-semibold leading-snug">
-        {title}{" "}
-        <span className="font-normal text-muted-foreground">{description}</span>
-      </p>
-    </div>
   );
 }
