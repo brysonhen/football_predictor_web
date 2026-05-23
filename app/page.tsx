@@ -110,7 +110,7 @@ export default function Home() {
       <footer className="border-t border-border bg-background">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground sm:flex-row">
           <p>
-            Built by Bryson Henderson · Match data from{" "}
+            © {new Date().getFullYear()} Bryson Henderson · Match data from{" "}
             <a
               href="https://www.football-data.co.uk"
               target="_blank"

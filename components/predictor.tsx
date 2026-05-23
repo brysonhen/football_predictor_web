@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowLeftRight, Loader2, TrendingUp } from "lucide-react";
 import teamsData from "@/data/teams.json";
 import { logoUrl, type PredictionResult, type TeamForm, type TeamMeta } from "@/lib/types";
@@ -144,6 +144,7 @@ export function Predictor() {
   const [result, setResult] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const didAutoRun = useRef(false);
 
   const swap = () => {
     setHome(away);
@@ -173,6 +174,13 @@ export function Predictor() {
       setLoading(false);
     }
   }
+
+  // Auto-run the default matchup on first load so visitors see a result immediately
+  useEffect(() => {
+    if (didAutoRun.current) return;
+    didAutoRun.current = true;
+    predict();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div id="predictor" className="scroll-mt-20">
@@ -232,10 +240,22 @@ export function Predictor() {
           </div>
         </div>
 
+        {/* Mobile swap — only visible on small screens */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={swap}
+          className="mt-3 flex w-full items-center justify-center gap-2 sm:hidden"
+          aria-label="Swap teams"
+        >
+          <ArrowLeftRight className="h-4 w-4" />
+          Swap home / away
+        </Button>
+
         <Button
           onClick={predict}
           disabled={loading}
-          className="mt-4 w-full font-semibold"
+          className="mt-3 w-full font-semibold"
           size="lg"
         >
           {loading ? (
