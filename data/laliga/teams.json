@@ -1,0 +1,124 @@
+{
+  "Alaves": {
+    "name": "Alaves",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Almeria": {
+    "name": "Almeria",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Ath Bilbao": {
+    "name": "Ath Bilbao",
+    "stadium": "San Mam\u00e9s Barria",
+    "city": "Bilbao, Vizcaya"
+  },
+  "Ath Madrid": {
+    "name": "Ath Madrid",
+    "stadium": "Riyadh Air Metropolitano",
+    "city": "Madrid"
+  },
+  "Barcelona": {
+    "name": "Barcelona",
+    "stadium": "Spotify Camp Nou",
+    "city": "Barcelona"
+  },
+  "Betis": {
+    "name": "Betis",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Cadiz": {
+    "name": "Cadiz",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Celta": {
+    "name": "Celta",
+    "stadium": "Estadio Abanca-Bala\u00eddos",
+    "city": "Vigo, Galicia, Spain"
+  },
+  "Eibar": {
+    "name": "Eibar",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Elche": {
+    "name": "Elche",
+    "stadium": "Estadio Mart\u00ednez Valero",
+    "city": "Elche, Alicante"
+  },
+  "Espanol": {
+    "name": "Espanol",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Getafe": {
+    "name": "Getafe",
+    "stadium": "Estadio Coliseum",
+    "city": "Getafe, Spain"
+  },
+  "Girona": {
+    "name": "Girona",
+    "stadium": "Estadi Municipal de Montilivi",
+    "city": "Girona"
+  },
+  "Granada": {
+    "name": "Granada",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Huesca": {
+    "name": "Huesca",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Las Palmas": {
+    "name": "Las Palmas",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Leganes": {
+    "name": "Leganes",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
+  },
+  "Levante": {
+    "name": "Levante",
+    "stadium": "Estadio Ciudad de Valencia",
+    "city": "Valencia"
+  },
+  "Mallorca": {
+    "name": "Mallorca"
+  },
+  "Osasuna": {
+    "name": "Osasuna"
+  },
+  "Oviedo": {
+    "name": "Oviedo"
+  },
+  "Real Madrid": {
+    "name": "Real Madrid",
+    "stadium": "Riyadh Air Metropolitano",
+    "city": "Madrid"
+  },
+  "Sevilla": {
+    "name": "Sevilla"
+  },
+  "Sociedad": {
+    "name": "Sociedad"
+  },
+  "Valencia": {
+    "name": "Valencia"
+  },
+  "Valladolid": {
+    "name": "Valladolid"
+  },
+  "Vallecano": {
+    "name": "Vallecano"
+  },
+  "Villarreal": {
+    "name": "Villarreal"
+  }
+}

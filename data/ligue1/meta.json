@@ -1,0 +1,168 @@
+{
+  "league": "ligue1",
+  "leagueName": "Ligue 1",
+  "country": "France",
+  "lastMatchDate": "2026-05-17",
+  "trainSeasons": [
+    "1920",
+    "2021",
+    "2122",
+    "2223",
+    "2324",
+    "2425"
+  ],
+  "testSeasons": [
+    "2526"
+  ],
+  "metrics": {
+    "dummy_log_loss": 1.0649,
+    "form_log_loss": 1.1023,
+    "model_log_loss": 1.0862,
+    "model_accuracy": 0.3932
+  },
+  "confusionMatrix": [
+    [
+      68,
+      24,
+      44
+    ],
+    [
+      33,
+      5,
+      34
+    ],
+    [
+      23,
+      21,
+      43
+    ]
+  ],
+  "monthlyAccuracy": [
+    {
+      "month": "2025-08",
+      "accuracy": 0.375,
+      "matches": 24
+    },
+    {
+      "month": "2025-09",
+      "accuracy": 0.375,
+      "matches": 24
+    },
+    {
+      "month": "2025-10",
+      "accuracy": 0.312,
+      "matches": 32
+    },
+    {
+      "month": "2025-11",
+      "accuracy": 0.556,
+      "matches": 36
+    },
+    {
+      "month": "2025-12",
+      "accuracy": 0.444,
+      "matches": 18
+    },
+    {
+      "month": "2026-01",
+      "accuracy": 0.387,
+      "matches": 31
+    },
+    {
+      "month": "2026-02",
+      "accuracy": 0.417,
+      "matches": 36
+    },
+    {
+      "month": "2026-03",
+      "accuracy": 0.29,
+      "matches": 31
+    },
+    {
+      "month": "2026-04",
+      "accuracy": 0.371,
+      "matches": 35
+    },
+    {
+      "month": "2026-05",
+      "accuracy": 0.393,
+      "matches": 28
+    }
+  ],
+  "recentResults": [
+    {
+      "date": "2026-05-17",
+      "home": "Strasbourg",
+      "away": "Monaco",
+      "fthg": 5,
+      "ftag": 4,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Lorient",
+      "away": "Le Havre",
+      "fthg": 0,
+      "ftag": 2,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Brest",
+      "away": "Angers",
+      "fthg": 1,
+      "ftag": 1,
+      "ftr": "D",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Lille",
+      "away": "Auxerre",
+      "fthg": 0,
+      "ftag": 2,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Paris FC",
+      "away": "Paris SG",
+      "fthg": 2,
+      "ftag": 1,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Lyon",
+      "away": "Lens",
+      "fthg": 0,
+      "ftag": 4,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Nice",
+      "away": "Metz",
+      "fthg": 0,
+      "ftag": 0,
+      "ftr": "D",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Marseille",
+      "away": "Rennes",
+      "fthg": 3,
+      "ftag": 1,
+      "ftr": "H",
+      "season": "2526"
+    }
+  ],
+  "totalMatches": 2336,
+  "teamCount": 28
+}

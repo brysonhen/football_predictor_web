@@ -1,0 +1,168 @@
+{
+  "league": "laliga",
+  "leagueName": "La Liga",
+  "country": "Spain",
+  "lastMatchDate": "2026-05-17",
+  "trainSeasons": [
+    "1920",
+    "2021",
+    "2122",
+    "2223",
+    "2324",
+    "2425"
+  ],
+  "testSeasons": [
+    "2526"
+  ],
+  "metrics": {
+    "dummy_log_loss": 1.0527,
+    "form_log_loss": 1.1111,
+    "model_log_loss": 1.049,
+    "model_accuracy": 0.4444
+  },
+  "confusionMatrix": [
+    [
+      92,
+      38,
+      45
+    ],
+    [
+      26,
+      20,
+      44
+    ],
+    [
+      25,
+      22,
+      48
+    ]
+  ],
+  "monthlyAccuracy": [
+    {
+      "month": "2025-08",
+      "accuracy": 0.321,
+      "matches": 28
+    },
+    {
+      "month": "2025-09",
+      "accuracy": 0.457,
+      "matches": 35
+    },
+    {
+      "month": "2025-10",
+      "accuracy": 0.357,
+      "matches": 28
+    },
+    {
+      "month": "2025-11",
+      "accuracy": 0.553,
+      "matches": 38
+    },
+    {
+      "month": "2025-12",
+      "accuracy": 0.562,
+      "matches": 32
+    },
+    {
+      "month": "2026-01",
+      "accuracy": 0.442,
+      "matches": 43
+    },
+    {
+      "month": "2026-02",
+      "accuracy": 0.475,
+      "matches": 40
+    },
+    {
+      "month": "2026-03",
+      "accuracy": 0.472,
+      "matches": 36
+    },
+    {
+      "month": "2026-04",
+      "accuracy": 0.35,
+      "matches": 40
+    },
+    {
+      "month": "2026-05",
+      "accuracy": 0.425,
+      "matches": 40
+    }
+  ],
+  "recentResults": [
+    {
+      "date": "2026-05-17",
+      "home": "Barcelona",
+      "away": "Betis",
+      "fthg": 3,
+      "ftag": 1,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Levante",
+      "away": "Mallorca",
+      "fthg": 2,
+      "ftag": 0,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Ath Bilbao",
+      "away": "Celta",
+      "fthg": 1,
+      "ftag": 1,
+      "ftr": "D",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Ath Madrid",
+      "away": "Girona",
+      "fthg": 1,
+      "ftag": 0,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Elche",
+      "away": "Getafe",
+      "fthg": 1,
+      "ftag": 0,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Vallecano",
+      "away": "Villarreal",
+      "fthg": 2,
+      "ftag": 0,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Osasuna",
+      "away": "Espanol",
+      "fthg": 1,
+      "ftag": 2,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Sevilla",
+      "away": "Real Madrid",
+      "fthg": 0,
+      "ftag": 1,
+      "ftr": "A",
+      "season": "2526"
+    }
+  ],
+  "totalMatches": 2650,
+  "teamCount": 28
+}

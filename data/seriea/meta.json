@@ -1,0 +1,168 @@
+{
+  "league": "seriea",
+  "leagueName": "Serie A",
+  "country": "Italy",
+  "lastMatchDate": "2026-05-17",
+  "trainSeasons": [
+    "1920",
+    "2021",
+    "2122",
+    "2223",
+    "2324",
+    "2425"
+  ],
+  "testSeasons": [
+    "2526"
+  ],
+  "metrics": {
+    "dummy_log_loss": 1.0833,
+    "form_log_loss": 1.0723,
+    "model_log_loss": 1.05,
+    "model_accuracy": 0.4639
+  },
+  "confusionMatrix": [
+    [
+      73,
+      35,
+      34
+    ],
+    [
+      36,
+      27,
+      27
+    ],
+    [
+      29,
+      32,
+      67
+    ]
+  ],
+  "monthlyAccuracy": [
+    {
+      "month": "2025-08",
+      "accuracy": 0.5,
+      "matches": 18
+    },
+    {
+      "month": "2025-09",
+      "accuracy": 0.481,
+      "matches": 27
+    },
+    {
+      "month": "2025-10",
+      "accuracy": 0.389,
+      "matches": 36
+    },
+    {
+      "month": "2025-11",
+      "accuracy": 0.395,
+      "matches": 38
+    },
+    {
+      "month": "2025-12",
+      "accuracy": 0.405,
+      "matches": 37
+    },
+    {
+      "month": "2026-01",
+      "accuracy": 0.569,
+      "matches": 58
+    },
+    {
+      "month": "2026-02",
+      "accuracy": 0.5,
+      "matches": 40
+    },
+    {
+      "month": "2026-03",
+      "accuracy": 0.361,
+      "matches": 36
+    },
+    {
+      "month": "2026-04",
+      "accuracy": 0.575,
+      "matches": 40
+    },
+    {
+      "month": "2026-05",
+      "accuracy": 0.4,
+      "matches": 30
+    }
+  ],
+  "recentResults": [
+    {
+      "date": "2026-05-17",
+      "home": "Udinese",
+      "away": "Cremonese",
+      "fthg": 0,
+      "ftag": 1,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Pisa",
+      "away": "Napoli",
+      "fthg": 0,
+      "ftag": 3,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Como",
+      "away": "Parma",
+      "fthg": 1,
+      "ftag": 0,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Genoa",
+      "away": "Milan",
+      "fthg": 1,
+      "ftag": 2,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Juventus",
+      "away": "Fiorentina",
+      "fthg": 0,
+      "ftag": 2,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Sassuolo",
+      "away": "Lecce",
+      "fthg": 2,
+      "ftag": 3,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Roma",
+      "away": "Lazio",
+      "fthg": 2,
+      "ftag": 0,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Cagliari",
+      "away": "Torino",
+      "fthg": 2,
+      "ftag": 1,
+      "ftr": "H",
+      "season": "2526"
+    }
+  ],
+  "totalMatches": 2650,
+  "teamCount": 31
+}

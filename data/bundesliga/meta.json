@@ -1,0 +1,168 @@
+{
+  "league": "bundesliga",
+  "leagueName": "Bundesliga",
+  "country": "Germany",
+  "lastMatchDate": "2026-05-16",
+  "trainSeasons": [
+    "1920",
+    "2021",
+    "2122",
+    "2223",
+    "2324",
+    "2425"
+  ],
+  "testSeasons": [
+    "2526"
+  ],
+  "metrics": {
+    "dummy_log_loss": 1.0708,
+    "form_log_loss": 1.0719,
+    "model_log_loss": 1.0884,
+    "model_accuracy": 0.4764
+  },
+  "confusionMatrix": [
+    [
+      64,
+      37,
+      28
+    ],
+    [
+      20,
+      18,
+      34
+    ],
+    [
+      19,
+      17,
+      59
+    ]
+  ],
+  "monthlyAccuracy": [
+    {
+      "month": "2025-08",
+      "accuracy": 0.375,
+      "matches": 16
+    },
+    {
+      "month": "2025-09",
+      "accuracy": 0.5,
+      "matches": 24
+    },
+    {
+      "month": "2025-10",
+      "accuracy": 0.56,
+      "matches": 25
+    },
+    {
+      "month": "2025-11",
+      "accuracy": 0.424,
+      "matches": 33
+    },
+    {
+      "month": "2025-12",
+      "accuracy": 0.481,
+      "matches": 27
+    },
+    {
+      "month": "2026-01",
+      "accuracy": 0.5,
+      "matches": 42
+    },
+    {
+      "month": "2026-02",
+      "accuracy": 0.4,
+      "matches": 35
+    },
+    {
+      "month": "2026-03",
+      "accuracy": 0.516,
+      "matches": 31
+    },
+    {
+      "month": "2026-04",
+      "accuracy": 0.556,
+      "matches": 36
+    },
+    {
+      "month": "2026-05",
+      "accuracy": 0.407,
+      "matches": 27
+    }
+  ],
+  "recentResults": [
+    {
+      "date": "2026-05-16",
+      "home": "Werder Bremen",
+      "away": "Dortmund",
+      "fthg": 0,
+      "ftag": 2,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-16",
+      "home": "Heidenheim",
+      "away": "Mainz",
+      "fthg": 0,
+      "ftag": 2,
+      "ftr": "A",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-16",
+      "home": "Bayern Munich",
+      "away": "FC Koln",
+      "fthg": 5,
+      "ftag": 1,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-16",
+      "home": "Ein Frankfurt",
+      "away": "Stuttgart",
+      "fthg": 2,
+      "ftag": 2,
+      "ftr": "D",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-16",
+      "home": "Freiburg",
+      "away": "RB Leipzig",
+      "fthg": 4,
+      "ftag": 1,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-16",
+      "home": "Union Berlin",
+      "away": "Augsburg",
+      "fthg": 4,
+      "ftag": 0,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-16",
+      "home": "Leverkusen",
+      "away": "Hamburg",
+      "fthg": 1,
+      "ftag": 1,
+      "ftr": "D",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-16",
+      "home": "St Pauli",
+      "away": "Wolfsburg",
+      "fthg": 1,
+      "ftag": 3,
+      "ftr": "A",
+      "season": "2526"
+    }
+  ],
+  "totalMatches": 2142,
+  "teamCount": 27
+}

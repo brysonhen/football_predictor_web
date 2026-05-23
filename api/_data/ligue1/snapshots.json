@@ -1,0 +1,394 @@
+{
+  "Monaco": {
+    "ppg_l5": 1.0,
+    "gf_l5": 2.0,
+    "ga_l5": 2.2,
+    "ppg_l10": 1.7,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "D",
+      "W",
+      "L",
+      "L"
+    ]
+  },
+  "Lyon": {
+    "ppg_l5": 1.8,
+    "gf_l5": 2.0,
+    "ga_l5": 2.2,
+    "ppg_l10": 1.5,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "W",
+      "W",
+      "L",
+      "L"
+    ]
+  },
+  "Marseille": {
+    "ppg_l5": 1.4,
+    "gf_l5": 1.0,
+    "ga_l5": 1.4,
+    "ppg_l10": 1.6,
+    "rest_days": 1,
+    "recent_form": [
+      "L",
+      "D",
+      "L",
+      "W",
+      "W"
+    ]
+  },
+  "Reims": {
+    "ppg_l5": 0.8,
+    "gf_l5": 0.4,
+    "ga_l5": 1.0,
+    "ppg_l10": 1.1,
+    "rest_days": 366,
+    "recent_form": [
+      "W",
+      "D",
+      "L",
+      "L",
+      "L"
+    ]
+  },
+  "Angers": {
+    "ppg_l5": 0.6,
+    "gf_l5": 0.8,
+    "ga_l5": 1.8,
+    "ppg_l10": 0.7,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "L",
+      "L",
+      "D",
+      "D"
+    ]
+  },
+  "Bordeaux": {
+    "ppg_l5": 0.8,
+    "gf_l5": 1.6,
+    "ga_l5": 2.4,
+    "ppg_l10": 0.9,
+    "rest_days": 1458,
+    "recent_form": [
+      "L",
+      "L",
+      "L",
+      "D",
+      "W"
+    ]
+  },
+  "Brest": {
+    "ppg_l5": 0.4,
+    "gf_l5": 1.0,
+    "ga_l5": 2.2,
+    "ppg_l10": 0.6,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "L",
+      "L",
+      "L",
+      "D"
+    ]
+  },
+  "Toulouse": {
+    "ppg_l5": 1.4,
+    "gf_l5": 1.6,
+    "ga_l5": 2.2,
+    "ppg_l10": 1.3,
+    "rest_days": 8,
+    "recent_form": [
+      "L",
+      "L",
+      "D",
+      "W",
+      "W"
+    ]
+  },
+  "Dijon": {
+    "ppg_l5": 0.6,
+    "gf_l5": 0.6,
+    "ga_l5": 3.4,
+    "ppg_l10": 0.6,
+    "rest_days": 1821,
+    "recent_form": [
+      "L",
+      "L",
+      "L",
+      "L",
+      "W"
+    ]
+  },
+  "St Etienne": {
+    "ppg_l5": 1.2,
+    "gf_l5": 1.6,
+    "ga_l5": 2.0,
+    "ppg_l10": 1.1,
+    "rest_days": 366,
+    "recent_form": [
+      "W",
+      "L",
+      "L",
+      "W",
+      "L"
+    ]
+  },
+  "Montpellier": {
+    "ppg_l5": 0.2,
+    "gf_l5": 0.4,
+    "ga_l5": 2.6,
+    "ppg_l10": 0.1,
+    "rest_days": 366,
+    "recent_form": [
+      "L",
+      "D",
+      "L",
+      "L",
+      "L"
+    ]
+  },
+  "Rennes": {
+    "ppg_l5": 1.8,
+    "gf_l5": 2.0,
+    "ga_l5": 1.8,
+    "ppg_l10": 1.9,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "W",
+      "L",
+      "W",
+      "L"
+    ]
+  },
+  "Nice": {
+    "ppg_l5": 0.8,
+    "gf_l5": 0.6,
+    "ga_l5": 0.8,
+    "ppg_l10": 0.8,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "D",
+      "D",
+      "L",
+      "D"
+    ]
+  },
+  "Amiens": {
+    "ppg_l5": 0.6,
+    "gf_l5": 1.4,
+    "ga_l5": 1.8,
+    "ppg_l10": 0.6,
+    "rest_days": 2264,
+    "recent_form": [
+      "L",
+      "D",
+      "D",
+      "L",
+      "D"
+    ]
+  },
+  "Paris SG": {
+    "ppg_l5": 2.0,
+    "gf_l5": 1.8,
+    "ga_l5": 0.8,
+    "ppg_l10": 1.9,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "D",
+      "W",
+      "W",
+      "L"
+    ]
+  },
+  "Nimes": {
+    "ppg_l5": 0.8,
+    "gf_l5": 1.6,
+    "ga_l5": 2.2,
+    "ppg_l10": 1.0,
+    "rest_days": 1821,
+    "recent_form": [
+      "L",
+      "D",
+      "W",
+      "L",
+      "L"
+    ]
+  },
+  "Strasbourg": {
+    "ppg_l5": 2.0,
+    "gf_l5": 2.4,
+    "ga_l5": 2.0,
+    "ppg_l10": 1.8,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "L",
+      "D",
+      "W",
+      "W"
+    ]
+  },
+  "Metz": {
+    "ppg_l5": 0.4,
+    "gf_l5": 1.2,
+    "ga_l5": 2.6,
+    "ppg_l10": 0.4,
+    "rest_days": 1,
+    "recent_form": [
+      "L",
+      "D",
+      "L",
+      "L",
+      "D"
+    ]
+  },
+  "Lille": {
+    "ppg_l5": 1.6,
+    "gf_l5": 0.6,
+    "ga_l5": 0.6,
+    "ppg_l10": 2.1,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "W",
+      "D",
+      "W",
+      "L"
+    ]
+  },
+  "Nantes": {
+    "ppg_l5": 0.8,
+    "gf_l5": 1.0,
+    "ga_l5": 1.4,
+    "ppg_l10": 0.6,
+    "rest_days": 10,
+    "recent_form": [
+      "D",
+      "L",
+      "L",
+      "W",
+      "L"
+    ]
+  },
+  "Lens": {
+    "ppg_l5": 1.6,
+    "gf_l5": 1.8,
+    "ga_l5": 1.2,
+    "ppg_l10": 1.7,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "D",
+      "W",
+      "L",
+      "W"
+    ]
+  },
+  "Lorient": {
+    "ppg_l5": 1.4,
+    "gf_l5": 2.0,
+    "ga_l5": 1.4,
+    "ppg_l10": 1.2,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "L",
+      "D",
+      "W",
+      "L"
+    ]
+  },
+  "Troyes": {
+    "ppg_l5": 0.4,
+    "gf_l5": 0.8,
+    "ga_l5": 2.2,
+    "ppg_l10": 0.3,
+    "rest_days": 1080,
+    "recent_form": [
+      "L",
+      "L",
+      "D",
+      "L",
+      "D"
+    ]
+  },
+  "Clermont": {
+    "ppg_l5": 0.6,
+    "gf_l5": 1.0,
+    "ga_l5": 2.4,
+    "ppg_l10": 0.8,
+    "rest_days": 729,
+    "recent_form": [
+      "L",
+      "W",
+      "L",
+      "L",
+      "L"
+    ]
+  },
+  "Ajaccio": {
+    "ppg_l5": 0.8,
+    "gf_l5": 0.2,
+    "ga_l5": 2.6,
+    "ppg_l10": 0.5,
+    "rest_days": 1080,
+    "recent_form": [
+      "D",
+      "L",
+      "L",
+      "L",
+      "W"
+    ]
+  },
+  "Auxerre": {
+    "ppg_l5": 2.0,
+    "gf_l5": 2.2,
+    "ga_l5": 1.4,
+    "ppg_l10": 1.6,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "L",
+      "W",
+      "W",
+      "W"
+    ]
+  },
+  "Le Havre": {
+    "ppg_l5": 1.2,
+    "gf_l5": 1.6,
+    "ga_l5": 1.4,
+    "ppg_l10": 0.9,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "D",
+      "D",
+      "L",
+      "W"
+    ]
+  },
+  "Paris FC": {
+    "ppg_l5": 1.8,
+    "gf_l5": 2.0,
+    "ga_l5": 1.0,
+    "ppg_l10": 1.8,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "L",
+      "W",
+      "L",
+      "W"
+    ]
+  }
+}

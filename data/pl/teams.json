@@ -1,0 +1,230 @@
+{
+  "Arsenal": {
+    "name": "Arsenal",
+    "lat": 51.5549,
+    "lng": -0.1084,
+    "city": "London",
+    "stadium": "Emirates Stadium",
+    "logoId": 3
+  },
+  "Aston Villa": {
+    "name": "Aston Villa",
+    "lat": 52.5092,
+    "lng": -1.8849,
+    "city": "Birmingham",
+    "stadium": "Villa Park",
+    "logoId": 7
+  },
+  "Bournemouth": {
+    "name": "Bournemouth",
+    "lat": 50.7352,
+    "lng": -1.8384,
+    "city": "Bournemouth",
+    "stadium": "Vitality Stadium",
+    "logoId": 91
+  },
+  "Brentford": {
+    "name": "Brentford",
+    "lat": 51.4907,
+    "lng": -0.2887,
+    "city": "London",
+    "stadium": "Gtech Community Stadium",
+    "logoId": 94
+  },
+  "Brighton": {
+    "name": "Brighton",
+    "lat": 50.8616,
+    "lng": -0.0838,
+    "city": "Brighton",
+    "stadium": "Amex Stadium",
+    "logoId": 36
+  },
+  "Burnley": {
+    "name": "Burnley",
+    "lat": 53.789,
+    "lng": -2.2301,
+    "city": "Burnley",
+    "stadium": "Turf Moor",
+    "logoId": 90
+  },
+  "Chelsea": {
+    "name": "Chelsea",
+    "lat": 51.4817,
+    "lng": -0.191,
+    "city": "London",
+    "stadium": "Stamford Bridge",
+    "logoId": 8
+  },
+  "Crystal Palace": {
+    "name": "Crystal Palace",
+    "lat": 51.3983,
+    "lng": -0.0855,
+    "city": "London",
+    "stadium": "Selhurst Park",
+    "logoId": 31
+  },
+  "Everton": {
+    "name": "Everton",
+    "lat": 53.4388,
+    "lng": -2.9663,
+    "city": "Liverpool",
+    "stadium": "Goodison Park",
+    "logoId": 11
+  },
+  "Fulham": {
+    "name": "Fulham",
+    "lat": 51.4749,
+    "lng": -0.2217,
+    "city": "London",
+    "stadium": "Craven Cottage",
+    "logoId": 54
+  },
+  "Ipswich": {
+    "name": "Ipswich",
+    "lat": 52.055,
+    "lng": 1.145,
+    "city": "Ipswich",
+    "stadium": "Portman Road",
+    "logoId": 40
+  },
+  "Leeds": {
+    "name": "Leeds",
+    "lat": 53.7778,
+    "lng": -1.5722,
+    "city": "Leeds",
+    "stadium": "Elland Road",
+    "logoId": 2
+  },
+  "Leicester": {
+    "name": "Leicester",
+    "lat": 52.6204,
+    "lng": -1.1422,
+    "city": "Leicester",
+    "stadium": "King Power Stadium",
+    "logoId": 13
+  },
+  "Liverpool": {
+    "name": "Liverpool",
+    "lat": 53.4308,
+    "lng": -2.9608,
+    "city": "Liverpool",
+    "stadium": "Anfield",
+    "logoId": 14
+  },
+  "Luton": {
+    "name": "Luton",
+    "lat": 51.8842,
+    "lng": -0.4316,
+    "city": "Luton",
+    "stadium": "Kenilworth Road",
+    "logoId": 102
+  },
+  "Man City": {
+    "name": "Man City",
+    "lat": 53.4831,
+    "lng": -2.2004,
+    "city": "Manchester",
+    "stadium": "Etihad Stadium",
+    "logoId": 43
+  },
+  "Man United": {
+    "name": "Man United",
+    "lat": 53.4631,
+    "lng": -2.2913,
+    "city": "Manchester",
+    "stadium": "Old Trafford",
+    "logoId": 1
+  },
+  "Newcastle": {
+    "name": "Newcastle",
+    "lat": 54.9756,
+    "lng": -1.6217,
+    "city": "Newcastle",
+    "stadium": "St James' Park",
+    "logoId": 4
+  },
+  "Norwich": {
+    "name": "Norwich",
+    "lat": 52.622,
+    "lng": 1.3092,
+    "city": "Norwich",
+    "stadium": "Carrow Road",
+    "logoId": 45,
+    "noRetina": true
+  },
+  "Nott'm Forest": {
+    "name": "Nott'm Forest",
+    "lat": 52.94,
+    "lng": -1.1328,
+    "city": "Nottingham",
+    "stadium": "City Ground",
+    "logoId": 17
+  },
+  "Sheffield United": {
+    "name": "Sheffield United",
+    "lat": 53.3703,
+    "lng": -1.4709,
+    "city": "Sheffield",
+    "stadium": "Bramall Lane",
+    "logoId": 49
+  },
+  "Southampton": {
+    "name": "Southampton",
+    "lat": 50.9058,
+    "lng": -1.3911,
+    "city": "Southampton",
+    "stadium": "St Mary's Stadium",
+    "logoId": 20
+  },
+  "Sunderland": {
+    "name": "Sunderland",
+    "lat": 54.9145,
+    "lng": -1.3882,
+    "city": "Sunderland",
+    "stadium": "Stadium of Light",
+    "logoId": 56,
+    "noRetina": true
+  },
+  "Tottenham": {
+    "name": "Tottenham",
+    "lat": 51.6043,
+    "lng": -0.0664,
+    "city": "London",
+    "stadium": "Tottenham Hotspur Stadium",
+    "logoId": 6
+  },
+  "Watford": {
+    "name": "Watford",
+    "lat": 51.6499,
+    "lng": -0.4015,
+    "city": "Watford",
+    "stadium": "Vicarage Road",
+    "logoId": 57,
+    "noRetina": true
+  },
+  "West Brom": {
+    "name": "West Brom",
+    "lat": 52.5093,
+    "lng": -1.9639,
+    "city": "West Bromwich",
+    "stadium": "The Hawthorns",
+    "logoId": 35,
+    "noRetina": true
+  },
+  "West Ham": {
+    "name": "West Ham",
+    "lat": 51.5386,
+    "lng": -0.0166,
+    "city": "London",
+    "stadium": "London Stadium",
+    "logoId": 21
+  },
+  "Wolves": {
+    "name": "Wolves",
+    "lat": 52.5903,
+    "lng": -2.1303,
+    "city": "Wolverhampton",
+    "stadium": "Molineux Stadium",
+    "logoId": 39
+  }
+}

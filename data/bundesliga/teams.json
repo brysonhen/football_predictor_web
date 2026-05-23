@@ -1,0 +1,101 @@
+{
+  "Augsburg": {
+    "name": "Augsburg",
+    "stadium": "WWK Arena",
+    "city": "Augsburg, Germany"
+  },
+  "Bayern Munich": {
+    "name": "Bayern Munich",
+    "stadium": "Allianz Arena",
+    "city": "Munich, Germany"
+  },
+  "Bielefeld": {
+    "name": "Bielefeld"
+  },
+  "Bochum": {
+    "name": "Bochum"
+  },
+  "Darmstadt": {
+    "name": "Darmstadt"
+  },
+  "Dortmund": {
+    "name": "Dortmund",
+    "stadium": "Signal Iduna Park",
+    "city": "Dortmund, Germany"
+  },
+  "Ein Frankfurt": {
+    "name": "Ein Frankfurt",
+    "stadium": "Deutsche Bank Park",
+    "city": "Frankfurt, Germany"
+  },
+  "FC Koln": {
+    "name": "FC Koln",
+    "stadium": "WWK Arena",
+    "city": "Augsburg, Germany"
+  },
+  "Fortuna Dusseldorf": {
+    "name": "Fortuna Dusseldorf"
+  },
+  "Freiburg": {
+    "name": "Freiburg",
+    "stadium": "Europa-Park Stadion",
+    "city": "Freiburg im Breisgau, Baden-W\u00fcrttemberg"
+  },
+  "Greuther Furth": {
+    "name": "Greuther Furth"
+  },
+  "Hamburg": {
+    "name": "Hamburg",
+    "stadium": "Volksparkstadion",
+    "city": "Hamburg, Germany"
+  },
+  "Heidenheim": {
+    "name": "Heidenheim",
+    "stadium": "Voith-Arena",
+    "city": "Heidenheim, Germany"
+  },
+  "Hertha": {
+    "name": "Hertha"
+  },
+  "Hoffenheim": {
+    "name": "Hoffenheim"
+  },
+  "Holstein Kiel": {
+    "name": "Holstein Kiel"
+  },
+  "Leverkusen": {
+    "name": "Leverkusen",
+    "stadium": "BayArena",
+    "city": "Leverkusen, Germany"
+  },
+  "M'gladbach": {
+    "name": "M'gladbach"
+  },
+  "Mainz": {
+    "name": "Mainz"
+  },
+  "Paderborn": {
+    "name": "Paderborn"
+  },
+  "RB Leipzig": {
+    "name": "RB Leipzig"
+  },
+  "Schalke 04": {
+    "name": "Schalke 04"
+  },
+  "St Pauli": {
+    "name": "St Pauli"
+  },
+  "Stuttgart": {
+    "name": "Stuttgart"
+  },
+  "Union Berlin": {
+    "name": "Union Berlin"
+  },
+  "Werder Bremen": {
+    "name": "Werder Bremen"
+  },
+  "Wolfsburg": {
+    "name": "Wolfsburg"
+  }
+}

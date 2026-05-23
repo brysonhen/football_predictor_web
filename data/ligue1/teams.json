@@ -1,0 +1,106 @@
+{
+  "Ajaccio": {
+    "name": "Ajaccio"
+  },
+  "Amiens": {
+    "name": "Amiens"
+  },
+  "Angers": {
+    "name": "Angers",
+    "stadium": "Stade Raymond Kopa",
+    "city": "Angers"
+  },
+  "Auxerre": {
+    "name": "Auxerre",
+    "stadium": "Stade de l'Abb\u00e9 Deschamps",
+    "city": "Auxerre"
+  },
+  "Bordeaux": {
+    "name": "Bordeaux"
+  },
+  "Brest": {
+    "name": "Brest",
+    "stadium": "Stade Francis-Le Bl\u00e9",
+    "city": "Brest"
+  },
+  "Clermont": {
+    "name": "Clermont"
+  },
+  "Dijon": {
+    "name": "Dijon"
+  },
+  "Le Havre": {
+    "name": "Le Havre",
+    "stadium": "Stade Oc\u00e9ane",
+    "city": "Le Havre"
+  },
+  "Lens": {
+    "name": "Lens",
+    "stadium": "Stade Bollaert-Delelis",
+    "city": "Lens, France"
+  },
+  "Lille": {
+    "name": "Lille",
+    "stadium": "Decathlon Arena - Stade Pierre-Mauroy",
+    "city": "Villeneuve-d'Ascq, Lille, France"
+  },
+  "Lorient": {
+    "name": "Lorient",
+    "stadium": "Stade du Moustoir",
+    "city": "Lorient"
+  },
+  "Lyon": {
+    "name": "Lyon",
+    "stadium": "Groupama Stadium",
+    "city": "Lyon"
+  },
+  "Marseille": {
+    "name": "Marseille",
+    "stadium": "Orange V\u00e9lodrome",
+    "city": "Marseille, France"
+  },
+  "Metz": {
+    "name": "Metz",
+    "stadium": "Stade Saint-Symphorien",
+    "city": "Metz, France"
+  },
+  "Monaco": {
+    "name": "Monaco"
+  },
+  "Montpellier": {
+    "name": "Montpellier"
+  },
+  "Nantes": {
+    "name": "Nantes"
+  },
+  "Nice": {
+    "name": "Nice"
+  },
+  "Nimes": {
+    "name": "Nimes"
+  },
+  "Paris FC": {
+    "name": "Paris FC"
+  },
+  "Paris SG": {
+    "name": "Paris SG"
+  },
+  "Reims": {
+    "name": "Reims"
+  },
+  "Rennes": {
+    "name": "Rennes"
+  },
+  "St Etienne": {
+    "name": "St Etienne"
+  },
+  "Strasbourg": {
+    "name": "Strasbourg"
+  },
+  "Toulouse": {
+    "name": "Toulouse"
+  },
+  "Troyes": {
+    "name": "Troyes"
+  }
+}

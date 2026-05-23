@@ -1,0 +1,394 @@
+{
+  "Ath Bilbao": {
+    "ppg_l5": 0.8,
+    "gf_l5": 1.4,
+    "ga_l5": 1.8,
+    "ppg_l10": 1.0,
+    "rest_days": 1,
+    "recent_form": [
+      "L",
+      "W",
+      "L",
+      "L",
+      "D"
+    ]
+  },
+  "Barcelona": {
+    "ppg_l5": 2.4,
+    "gf_l5": 1.8,
+    "ga_l5": 0.6,
+    "ppg_l10": 2.7,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "W",
+      "W",
+      "L",
+      "W"
+    ]
+  },
+  "Celta": {
+    "ppg_l5": 1.4,
+    "gf_l5": 1.6,
+    "ga_l5": 1.4,
+    "ppg_l10": 1.1,
+    "rest_days": 1,
+    "recent_form": [
+      "L",
+      "W",
+      "W",
+      "L",
+      "D"
+    ]
+  },
+  "Real Madrid": {
+    "ppg_l5": 2.0,
+    "gf_l5": 1.2,
+    "ga_l5": 0.6,
+    "ppg_l10": 2.0,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "W",
+      "L",
+      "W",
+      "W"
+    ]
+  },
+  "Valencia": {
+    "ppg_l5": 2.0,
+    "gf_l5": 1.6,
+    "ga_l5": 1.4,
+    "ppg_l10": 1.4,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "L",
+      "W",
+      "D",
+      "W"
+    ]
+  },
+  "Sociedad": {
+    "ppg_l5": 0.6,
+    "gf_l5": 1.8,
+    "ga_l5": 2.2,
+    "ppg_l10": 1.0,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "L",
+      "D",
+      "D",
+      "L"
+    ]
+  },
+  "Mallorca": {
+    "ppg_l5": 0.8,
+    "gf_l5": 0.8,
+    "ga_l5": 1.6,
+    "ppg_l10": 1.4,
+    "rest_days": 1,
+    "recent_form": [
+      "L",
+      "W",
+      "D",
+      "L",
+      "L"
+    ]
+  },
+  "Eibar": {
+    "ppg_l5": 1.4,
+    "gf_l5": 1.2,
+    "ga_l5": 1.2,
+    "ppg_l10": 0.7,
+    "rest_days": 1822,
+    "recent_form": [
+      "W",
+      "W",
+      "D",
+      "L",
+      "L"
+    ]
+  },
+  "Leganes": {
+    "ppg_l5": 2.0,
+    "gf_l5": 1.8,
+    "ga_l5": 1.4,
+    "ppg_l10": 1.3,
+    "rest_days": 359,
+    "recent_form": [
+      "D",
+      "W",
+      "L",
+      "W",
+      "W"
+    ]
+  },
+  "Osasuna": {
+    "ppg_l5": 0.6,
+    "gf_l5": 1.4,
+    "ga_l5": 2.0,
+    "ppg_l10": 0.8,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "L",
+      "L",
+      "L",
+      "L"
+    ]
+  },
+  "Villarreal": {
+    "ppg_l5": 1.4,
+    "gf_l5": 2.0,
+    "ga_l5": 1.6,
+    "ppg_l10": 1.5,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "W",
+      "D",
+      "L",
+      "L"
+    ]
+  },
+  "Granada": {
+    "ppg_l5": 0.0,
+    "gf_l5": 0.4,
+    "ga_l5": 3.6,
+    "ppg_l10": 0.7,
+    "rest_days": 724,
+    "recent_form": [
+      "L",
+      "L",
+      "L",
+      "L",
+      "L"
+    ]
+  },
+  "Betis": {
+    "ppg_l5": 1.6,
+    "gf_l5": 1.8,
+    "ga_l5": 1.4,
+    "ppg_l10": 1.4,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "W",
+      "D",
+      "W",
+      "L"
+    ]
+  },
+  "Valladolid": {
+    "ppg_l5": 0.0,
+    "gf_l5": 0.4,
+    "ga_l5": 1.8,
+    "ppg_l10": 0.0,
+    "rest_days": 359,
+    "recent_form": [
+      "L",
+      "L",
+      "L",
+      "L",
+      "L"
+    ]
+  },
+  "Ath Madrid": {
+    "ppg_l5": 2.4,
+    "gf_l5": 1.6,
+    "ga_l5": 0.8,
+    "ppg_l10": 1.5,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "W",
+      "L",
+      "W",
+      "W"
+    ]
+  },
+  "Getafe": {
+    "ppg_l5": 0.8,
+    "gf_l5": 0.6,
+    "ga_l5": 1.2,
+    "ppg_l10": 1.3,
+    "rest_days": 1,
+    "recent_form": [
+      "L",
+      "L",
+      "D",
+      "W",
+      "L"
+    ]
+  },
+  "Alaves": {
+    "ppg_l5": 2.0,
+    "gf_l5": 1.4,
+    "ga_l5": 1.2,
+    "ppg_l10": 1.6,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "L",
+      "D",
+      "W",
+      "W"
+    ]
+  },
+  "Levante": {
+    "ppg_l5": 2.0,
+    "gf_l5": 1.8,
+    "ga_l5": 1.8,
+    "ppg_l10": 2.0,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "L",
+      "W",
+      "W",
+      "W"
+    ]
+  },
+  "Espanol": {
+    "ppg_l5": 1.4,
+    "gf_l5": 1.0,
+    "ga_l5": 1.0,
+    "ppg_l10": 0.8,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "L",
+      "L",
+      "W",
+      "W"
+    ]
+  },
+  "Sevilla": {
+    "ppg_l5": 1.8,
+    "gf_l5": 1.4,
+    "ga_l5": 1.2,
+    "ppg_l10": 1.2,
+    "rest_days": 1,
+    "recent_form": [
+      "L",
+      "W",
+      "W",
+      "W",
+      "L"
+    ]
+  },
+  "Cadiz": {
+    "ppg_l5": 1.4,
+    "gf_l5": 0.6,
+    "ga_l5": 1.8,
+    "ppg_l10": 1.1,
+    "rest_days": 723,
+    "recent_form": [
+      "L",
+      "W",
+      "W",
+      "D",
+      "L"
+    ]
+  },
+  "Huesca": {
+    "ppg_l5": 1.4,
+    "gf_l5": 0.6,
+    "ga_l5": 0.6,
+    "ppg_l10": 1.3,
+    "rest_days": 1822,
+    "recent_form": [
+      "W",
+      "L",
+      "W",
+      "L",
+      "D"
+    ]
+  },
+  "Elche": {
+    "ppg_l5": 1.4,
+    "gf_l5": 1.2,
+    "ga_l5": 1.4,
+    "ppg_l10": 1.6,
+    "rest_days": 1,
+    "recent_form": [
+      "W",
+      "L",
+      "D",
+      "L",
+      "W"
+    ]
+  },
+  "Vallecano": {
+    "ppg_l5": 1.8,
+    "gf_l5": 1.8,
+    "ga_l5": 1.0,
+    "ppg_l10": 1.6,
+    "rest_days": 1,
+    "recent_form": [
+      "D",
+      "W",
+      "D",
+      "D",
+      "W"
+    ]
+  },
+  "Girona": {
+    "ppg_l5": 0.4,
+    "gf_l5": 0.6,
+    "ga_l5": 1.2,
+    "ppg_l10": 0.9,
+    "rest_days": 1,
+    "recent_form": [
+      "L",
+      "L",
+      "D",
+      "D",
+      "L"
+    ]
+  },
+  "Almeria": {
+    "ppg_l5": 1.4,
+    "gf_l5": 2.2,
+    "ga_l5": 1.6,
+    "ppg_l10": 1.1,
+    "rest_days": 723,
+    "recent_form": [
+      "W",
+      "L",
+      "L",
+      "D",
+      "W"
+    ]
+  },
+  "Las Palmas": {
+    "ppg_l5": 0.0,
+    "gf_l5": 0.4,
+    "ga_l5": 1.6,
+    "ppg_l10": 0.7,
+    "rest_days": 359,
+    "recent_form": [
+      "L",
+      "L",
+      "L",
+      "L",
+      "L"
+    ]
+  },
+  "Oviedo": {
+    "ppg_l5": 0.2,
+    "gf_l5": 0.2,
+    "ga_l5": 1.6,
+    "ppg_l10": 1.1,
+    "rest_days": 1,
+    "recent_form": [
+      "L",
+      "L",
+      "D",
+      "L",
+      "L"
+    ]
+  }
+}

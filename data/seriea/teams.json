@@ -1,0 +1,115 @@
+{
+  "Atalanta": {
+    "name": "Atalanta",
+    "stadium": "New Balance Arena",
+    "city": "Bergamo, Italy"
+  },
+  "Benevento": {
+    "name": "Benevento"
+  },
+  "Bologna": {
+    "name": "Bologna",
+    "stadium": "Stadio Renato Dall'Ara",
+    "city": "Bologna, Emilia-Romagna"
+  },
+  "Brescia": {
+    "name": "Brescia"
+  },
+  "Cagliari": {
+    "name": "Cagliari",
+    "stadium": "Unipol Domus",
+    "city": "Cagliari, Italy"
+  },
+  "Como": {
+    "name": "Como",
+    "stadium": "Stadio Giuseppe Sinigaglia",
+    "city": "Como, Italy"
+  },
+  "Cremonese": {
+    "name": "Cremonese",
+    "stadium": "Stadio Giovanni Zini",
+    "city": "Cremona, Italy"
+  },
+  "Crotone": {
+    "name": "Crotone"
+  },
+  "Empoli": {
+    "name": "Empoli"
+  },
+  "Fiorentina": {
+    "name": "Fiorentina",
+    "stadium": "Stadio Artemio Franchi",
+    "city": "Florence, Italy"
+  },
+  "Frosinone": {
+    "name": "Frosinone"
+  },
+  "Genoa": {
+    "name": "Genoa",
+    "stadium": "Stadio Luigi Ferraris",
+    "city": "Genoa, Italy"
+  },
+  "Inter": {
+    "name": "Inter",
+    "stadium": "Stadio Giuseppe Meazza",
+    "city": "Milan, Italy"
+  },
+  "Juventus": {
+    "name": "Juventus"
+  },
+  "Lazio": {
+    "name": "Lazio"
+  },
+  "Lecce": {
+    "name": "Lecce"
+  },
+  "Milan": {
+    "name": "Milan",
+    "stadium": "Stadio Giuseppe Meazza",
+    "city": "San Siro, Milan"
+  },
+  "Monza": {
+    "name": "Monza"
+  },
+  "Napoli": {
+    "name": "Napoli"
+  },
+  "Parma": {
+    "name": "Parma"
+  },
+  "Pisa": {
+    "name": "Pisa"
+  },
+  "Roma": {
+    "name": "Roma"
+  },
+  "Salernitana": {
+    "name": "Salernitana"
+  },
+  "Sampdoria": {
+    "name": "Sampdoria"
+  },
+  "Sassuolo": {
+    "name": "Sassuolo"
+  },
+  "Spal": {
+    "name": "Spal"
+  },
+  "Spezia": {
+    "name": "Spezia"
+  },
+  "Torino": {
+    "name": "Torino"
+  },
+  "Udinese": {
+    "name": "Udinese"
+  },
+  "Venezia": {
+    "name": "Venezia"
+  },
+  "Verona": {
+    "name": "Verona",
+    "stadium": "Stadio Marcantonio Bentegodi",
+    "city": "Verona, Italy"
+  }
+}
