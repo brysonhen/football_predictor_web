@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import meta from "@/data/meta.json";
 import { formatSeason } from "@/lib/types";
 
-const GITHUB_URL = "https://github.com/brysonhen/soccer_matchup_predictor";
+const GITHUB_URL = "https://github.com/brysonhen/football_matchup_predictor";
 
 const HERO_STATS = [
   { value: "6", label: "PL seasons" },
