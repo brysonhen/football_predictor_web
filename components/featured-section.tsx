@@ -22,7 +22,7 @@ function ResultCrest({ name }: { name: string }) {
   /* eslint-disable-next-line @next/next/no-img-element */
   return (
     <img
-      src={logoUrl(team.logoId)}
+      src={logoUrl(team.logoId, team.noRetina)}
       alt={name}
       className="h-5 w-5 object-contain"
     />

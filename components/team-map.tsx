@@ -87,7 +87,7 @@ export function TeamMap() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={logoUrl(pin.team.logoId)}
+                src={logoUrl(pin.team.logoId, pin.team.noRetina)}
                 alt={pin.team.name}
                 width={14}
                 height={14}

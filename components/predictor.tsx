@@ -26,7 +26,7 @@ function TeamLogo({ name, size = 24 }: { name: string; size?: number }) {
   /* eslint-disable-next-line @next/next/no-img-element */
   return (
     <img
-      src={logoUrl(team.logoId)}
+      src={logoUrl(team.logoId, team.noRetina)}
       alt={name}
       width={size}
       height={size}

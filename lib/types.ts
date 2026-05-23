@@ -7,6 +7,7 @@ export interface TeamMeta {
   city: string;
   stadium: string;
   logoId: number;
+  noRetina?: boolean;
 }
 
 export interface TeamForm {
@@ -75,9 +76,10 @@ export interface Meta {
   teamCount: number;
 }
 
-/** PL official badge CDN. */
-export function logoUrl(logoId: number): string {
-  return `https://resources.premierleague.com/premierleague/badges/rb/t${logoId}.svg`;
+/** PL official badge CDN. Pass noRetina=true for clubs without a high-DPI badge. */
+export function logoUrl(logoId: number, noRetina = false): string {
+  const path = noRetina ? "" : "rb/";
+  return `https://resources.premierleague.com/premierleague/badges/${path}t${logoId}.svg`;
 }
 
 /** "1920" -> "2019/20" */

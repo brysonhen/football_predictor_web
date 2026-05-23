@@ -149,6 +149,7 @@
     "city": "Norwich",
     "stadium": "Carrow Road",
     "logoId": 45,
+    "noRetina": true,
     "name": "Norwich"
   },
   "Nott'm Forest": {
@@ -181,6 +182,7 @@
     "city": "Sunderland",
     "stadium": "Stadium of Light",
     "logoId": 56,
+    "noRetina": true,
     "name": "Sunderland"
   },
   "Tottenham": {
@@ -197,6 +199,7 @@
     "city": "Watford",
     "stadium": "Vicarage Road",
     "logoId": 57,
+    "noRetina": true,
     "name": "Watford"
   },
   "West Brom": {
@@ -205,6 +208,7 @@
     "city": "West Bromwich",
     "stadium": "The Hawthorns",
     "logoId": 35,
+    "noRetina": true,
     "name": "West Brom"
   },
   "West Ham": {
