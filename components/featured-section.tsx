@@ -7,9 +7,9 @@ import {
 } from "lucide-react";
 import { TeamMap } from "@/components/team-map";
 import { AccuracyChart } from "@/components/accuracy-chart";
-import meta from "@/data/meta.json";
-import { logoUrl, formatSeason } from "@/lib/types";
-import teamsData from "@/data/teams.json";
+import meta from "@/data/pl/meta.json";
+import { teamLogoSrc, formatSeason } from "@/lib/types";
+import teamsData from "@/data/pl/teams.json";
 import type { TeamMeta } from "@/lib/types";
 
 const teamByName = new Map(
@@ -18,11 +18,12 @@ const teamByName = new Map(
 
 function ResultCrest({ name }: { name: string }) {
   const team = teamByName.get(name);
-  if (!team) return null;
+  const src = team ? teamLogoSrc(team) : null;
+  if (!src) return null;
   /* eslint-disable-next-line @next/next/no-img-element */
   return (
     <img
-      src={logoUrl(team.logoId, team.noRetina)}
+      src={src}
       alt={name}
       className="h-5 w-5 object-contain"
     />
@@ -61,9 +62,9 @@ export function FeaturedSection() {
             Under the hood
           </h2>
           <p className="mt-3 text-muted-foreground">
-            A logistic regression trained on six Premier League seasons, with
-            strict temporal validation so every prediction uses only what was
-            known before kickoff.
+            Five separate logistic regression models — one per league — each
+            trained with strict temporal validation so every prediction uses
+            only what was known before kickoff.
           </p>
         </div>
 
@@ -77,7 +78,7 @@ export function FeaturedSection() {
             <h3 className="mt-3 text-xl font-semibold">
               Every ground, mapped.{" "}
               <span className="font-normal text-muted-foreground">
-                {meta.teamCount} clubs across England feed the training data.
+                {meta.teamCount} Premier League clubs feed the England model.
               </span>
             </h3>
             <div className="relative mt-4">

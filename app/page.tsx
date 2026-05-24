@@ -2,16 +2,14 @@ import { Code, Target, TrendingUp } from "lucide-react";
 import { Predictor } from "@/components/predictor";
 import { FeaturedSection } from "@/components/featured-section";
 import { Button } from "@/components/ui/button";
-import meta from "@/data/meta.json";
-import { formatSeason } from "@/lib/types";
 
 const GITHUB_URL = "https://github.com/brysonhen/football_matchup_predictor";
 
 const HERO_STATS = [
-  { value: "6", label: "PL seasons" },
-  { value: meta.totalMatches.toLocaleString(), label: "matches analysed" },
-  { value: `${Math.round(meta.metrics.model_accuracy * 100)}%`, label: "test accuracy" },
-  { value: meta.teamCount.toString(), label: "clubs covered" },
+  { value: "5",      label: "leagues covered" },
+  { value: "12,428", label: "matches analysed" },
+  { value: "45%",    label: "avg test accuracy" },
+  { value: "142",    label: "clubs covered" },
 ];
 
 export default function Home() {
@@ -49,14 +47,14 @@ export default function Home() {
           <div className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
             <div className="mx-auto max-w-3xl text-center">
               <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-                Premier League{" "}
-                <span className="text-primary">Matchup Predictor</span>
+                Football{" "}
+                <span className="text-primary">Match Predictor</span>
               </h1>
 
               <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
                 A machine learning model that estimates pre-match win
-                probabilities for any Premier League fixture, using nothing but
-                each team&apos;s recent form.
+                probabilities for fixtures across Europe&apos;s top 5 leagues,
+                using nothing but each team&apos;s recent form.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -121,9 +119,7 @@ export default function Home() {
             </a>
           </p>
           <div className="flex items-center gap-4">
-            <span>
-              Trained on {meta.trainSeasons.map(formatSeason).join(", ")}
-            </span>
+            <span>PL · La Liga · Bundesliga · Serie A · Ligue 1</span>
             <a
               href={GITHUB_URL}
               target="_blank"

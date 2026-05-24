@@ -1,13 +1,23 @@
 export type Outcome = "H" | "D" | "A";
 
+export interface League {
+  id: string;
+  name: string;
+  country: string;
+}
+
 export interface TeamMeta {
   name: string;
-  lat: number;
-  lng: number;
-  city: string;
-  stadium: string;
-  logoId: number;
+  lat?: number;
+  lng?: number;
+  city?: string;
+  stadium?: string;
+  /** PL only: use with logoUrl() to build the CDN URL */
+  logoId?: number;
+  /** PL only: skip the /rb/ retina path for clubs missing the HiDPI badge */
   noRetina?: boolean;
+  /** Non-PL leagues: direct logo URL (thesportsdb) */
+  logoUrl?: string;
 }
 
 export interface TeamForm {
@@ -60,6 +70,9 @@ export interface MonthlyAccuracy {
 }
 
 export interface Meta {
+  league: string;
+  leagueName: string;
+  country: string;
   lastMatchDate: string;
   trainSeasons: string[];
   testSeasons: string[];
@@ -80,6 +93,13 @@ export interface Meta {
 export function logoUrl(logoId: number, noRetina = false): string {
   const path = noRetina ? "" : "rb/";
   return `https://resources.premierleague.com/premierleague/badges/${path}t${logoId}.svg`;
+}
+
+/** Resolve the best logo src for any team, regardless of league. */
+export function teamLogoSrc(team: TeamMeta): string | null {
+  if (team.logoUrl) return team.logoUrl;
+  if (team.logoId) return logoUrl(team.logoId, team.noRetina);
+  return null;
 }
 
 /** "1920" -> "2019/20" */

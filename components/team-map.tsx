@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import DottedMap from "dotted-map";
-import teamsData from "@/data/teams.json";
-import { logoUrl } from "@/lib/types";
+import teamsData from "@/data/pl/teams.json";
+import { teamLogoSrc } from "@/lib/types";
 import type { TeamMeta } from "@/lib/types";
 
 // Focused on England — enough headroom to show Scotland/Wales coastline for context
@@ -18,6 +18,7 @@ type Pin = { team: TeamMeta; x: number; y: number };
 
 const pins: Pin[] = teams
   .map((team) => {
+    if (team.lat == null || team.lng == null) return null;
     const pin = map.getPin({ lat: team.lat, lng: team.lng });
     return pin ? { team, x: pin.x, y: pin.y } : null;
   })
@@ -87,7 +88,7 @@ export function TeamMap() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={logoUrl(pin.team.logoId, pin.team.noRetina)}
+                src={teamLogoSrc(pin.team) ?? ""}
                 alt={pin.team.name}
                 width={14}
                 height={14}

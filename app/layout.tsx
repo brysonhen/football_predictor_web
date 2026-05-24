@@ -16,14 +16,14 @@ const geistMono = Geist_Mono({
 const SITE_URL = "https://matchpredictor.net";
 
 export const metadata: Metadata = {
-  title: "Premier League Matchup Predictor",
+  title: "Football Match Predictor",
   description:
-    "A machine learning model that estimates pre-match win probabilities for any Premier League fixture, based on recent team form.",
+    "A machine learning model that estimates pre-match win probabilities across Europe's top 5 leagues — Premier League, La Liga, Bundesliga, Serie A, and Ligue 1.",
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "Premier League Matchup Predictor",
+    title: "Football Match Predictor",
     description:
-      "Predict any Premier League matchup using real form data from 6 seasons of results. Built with logistic regression and strict temporal validation.",
+      "Predict any fixture across Europe's top 5 leagues using real form data. Built with logistic regression and strict temporal validation.",
     url: SITE_URL,
     siteName: "PL Matchup Predictor",
     locale: "en_GB",
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Premier League Matchup Predictor",
+    title: "Football Match Predictor",
     description:
-      "ML-powered win probability predictions for any Premier League fixture, based on recent form.",
+      "ML-powered win probability predictions for fixtures across Europe's top 5 leagues, based on recent form.",
   },
   robots: {
     index: true,

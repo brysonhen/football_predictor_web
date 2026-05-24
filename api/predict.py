@@ -1,9 +1,9 @@
 """
-Vercel Python serverless function: Premier League matchup prediction.
+Vercel Python serverless function: football matchup prediction.
 
-Loads the exported logistic-regression coefficients and runs the prediction
-with numpy. Head-to-head history is computed with pandas. Training stays in
-the separate data-science repo; this only serves the trained model.
+Supports Premier League, La Liga, Bundesliga, Serie A, and Ligue 1.
+Each league has its own trained model stored in api/_data/{league}/.
+Data is cached in module-level dicts so warm containers skip disk reads.
 """
 import json
 import os
@@ -14,47 +14,46 @@ import pandas as pd
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_data")
 
-
-def _load(name: str):
-    with open(os.path.join(DATA_DIR, name)) as f:
-        return json.load(f)
-
-
-# Loaded once per warm container.
-MODEL = _load("model.json")
-SNAPSHOTS = _load("snapshots.json")
-MATCHES = pd.DataFrame(_load("matches.json"))
-
+VALID_LEAGUES = {"pl", "laliga", "bundesliga", "seriea", "ligue1"}
 OUTCOME_NAMES = {"H": "Home win", "D": "Draw", "A": "Away win"}
+
+# Per-league cache: { league_id: (model, snapshots, matches_df) }
+_CACHE: dict[str, tuple[dict, dict, pd.DataFrame]] = {}
+
+
+def _load_league(league: str) -> tuple[dict, dict, pd.DataFrame]:
+    if league in _CACHE:
+        return _CACHE[league]
+    d = os.path.join(DATA_DIR, league)
+    with open(os.path.join(d, "model.json")) as f:
+        model = json.load(f)
+    with open(os.path.join(d, "snapshots.json")) as f:
+        snapshots = json.load(f)
+    with open(os.path.join(d, "matches.json")) as f:
+        matches = pd.DataFrame(json.load(f))
+    _CACHE[league] = (model, snapshots, matches)
+    return model, snapshots, matches
 
 
 def _feature_vector(home: dict, away: dict) -> np.ndarray:
-    """Build the 12-feature vector in the exact order the model was trained on."""
     return np.array([
-        home["ppg_l5"],
-        away["ppg_l5"],
-        home["ppg_l10"],
-        away["ppg_l10"],
-        home["gf_l5"],
-        home["ga_l5"],
-        away["gf_l5"],
-        away["ga_l5"],
-        home["rest_days"],
-        away["rest_days"],
+        home["ppg_l5"], away["ppg_l5"],
+        home["ppg_l10"], away["ppg_l10"],
+        home["gf_l5"], home["ga_l5"],
+        away["gf_l5"], away["ga_l5"],
+        home["rest_days"], away["rest_days"],
         home["ppg_l5"] - away["ppg_l5"],
         home["gf_l5"] - away["gf_l5"],
     ], dtype=float)
 
 
 def _softmax(logits: np.ndarray) -> np.ndarray:
-    shifted = logits - np.max(logits)
-    exp = np.exp(shifted)
+    exp = np.exp(logits - np.max(logits))
     return exp / exp.sum()
 
 
 def _explain(feature: str, impact: float, home_name: str, away_name: str,
              h: dict, a: dict) -> str:
-    """Plain-English reason for a prediction driver (ported from the Streamlit app)."""
     supports = impact > 0
 
     def v(snap, key):
@@ -125,16 +124,14 @@ def _verdict(home: str, away: str, hp: float, dp: float, ap: float) -> str:
     return "This matchup is very close. A draw is firmly on the cards."
 
 
-def _head_to_head(home: str, away: str) -> dict:
-    df = MATCHES
+def _head_to_head(home: str, away: str, matches: pd.DataFrame) -> dict:
     mask = (
-        ((df["home"] == home) & (df["away"] == away))
-        | ((df["home"] == away) & (df["away"] == home))
+        ((matches["home"] == home) & (matches["away"] == away))
+        | ((matches["home"] == away) & (matches["away"] == home))
     )
-    sub = df[mask].sort_values("date", ascending=False).head(8)
-
+    sub = matches[mask].sort_values("date", ascending=False).head(8)
     home_wins = draws = away_wins = 0
-    matches = []
+    result_matches = []
     for _, r in sub.iterrows():
         ftr = r["ftr"]
         if ftr == "D":
@@ -143,45 +140,39 @@ def _head_to_head(home: str, away: str) -> dict:
             home_wins += 1
         else:
             away_wins += 1
-        matches.append({
-            "date": r["date"],
-            "home": r["home"],
-            "away": r["away"],
-            "fthg": int(r["fthg"]),
-            "ftag": int(r["ftag"]),
-            "ftr": ftr,
+        result_matches.append({
+            "date": r["date"], "home": r["home"], "away": r["away"],
+            "fthg": int(r["fthg"]), "ftag": int(r["ftag"]), "ftr": ftr,
         })
-    return {"homeWins": home_wins, "draws": draws, "awayWins": away_wins, "matches": matches}
+    return {"homeWins": home_wins, "draws": draws, "awayWins": away_wins, "matches": result_matches}
 
 
-def compute_prediction(home: str, away: str) -> dict:
-    if home not in SNAPSHOTS:
-        raise ValueError(f"No form data for {home}")
-    if away not in SNAPSHOTS:
-        raise ValueError(f"No form data for {away}")
+def compute_prediction(home: str, away: str, league: str = "pl") -> dict:
+    model, snapshots, matches = _load_league(league)
+
+    if home not in snapshots:
+        raise ValueError(f"No form data for '{home}' in {league}")
+    if away not in snapshots:
+        raise ValueError(f"No form data for '{away}' in {league}")
     if home == away:
         raise ValueError("Pick two different teams")
 
-    h = SNAPSHOTS[home]
-    a = SNAPSHOTS[away]
-
+    h, a = snapshots[home], snapshots[away]
     x = _feature_vector(h, a)
-    mean = np.array(MODEL["scaler"]["mean"])
-    scale = np.array(MODEL["scaler"]["scale"])
+    mean = np.array(model["scaler"]["mean"])
+    scale = np.array(model["scaler"]["scale"])
     scaled = (x - mean) / scale
 
-    coef = np.array(MODEL["coef"])          # (3, 12)
-    intercept = np.array(MODEL["intercept"])  # (3,)
-    logits = scaled @ coef.T + intercept
-    probs = _softmax(logits)
+    coef = np.array(model["coef"])
+    intercept = np.array(model["intercept"])
+    probs = _softmax(scaled @ coef.T + intercept)
 
-    labels = MODEL["labels"]                # ["H", "D", "A"]
+    labels = model["labels"]
     pred_idx = int(np.argmax(probs))
     prob_map = {labels[i]: float(probs[i]) for i in range(len(labels))}
 
-    # Drivers: per-feature contribution to the predicted class.
     contributions = coef[pred_idx] * scaled
-    features = MODEL["features"]
+    features = model["features"]
     order = np.argsort(-np.abs(contributions))[:5]
     drivers = [{
         "feature": features[i],
@@ -190,17 +181,14 @@ def compute_prediction(home: str, away: str) -> dict:
     } for i in order]
 
     hp, dp, ap = prob_map["H"], prob_map["D"], prob_map["A"]
-
     return {
-        "home": home,
-        "away": away,
+        "home": home, "away": away,
         "probabilities": {"home": hp, "draw": dp, "away": ap},
         "predicted": OUTCOME_NAMES[labels[pred_idx]],
         "verdict": _verdict(home, away, hp, dp, ap),
-        "homeForm": h,
-        "awayForm": a,
+        "homeForm": h, "awayForm": a,
         "drivers": drivers,
-        "h2h": _head_to_head(home, away),
+        "h2h": _head_to_head(home, away, matches),
     }
 
 
@@ -231,7 +219,11 @@ class handler(BaseHTTPRequestHandler):
             payload = json.loads(raw)
             home = str(payload.get("home", ""))[:64]
             away = str(payload.get("away", ""))[:64]
-            result = compute_prediction(home, away)
+            league = str(payload.get("league", "pl"))[:20]
+            if league not in VALID_LEAGUES:
+                self._send(400, {"error": f"Unknown league: {league}"})
+                return
+            result = compute_prediction(home, away, league)
             self._send(200, result)
         except (json.JSONDecodeError, UnicodeDecodeError):
             self._send(400, {"error": "Invalid request body"})
@@ -242,7 +234,7 @@ class handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    # Local smoke test: python api/predict.py
     import sys
+    league_arg = sys.argv[3] if len(sys.argv) > 3 else "pl"
     h, a = (sys.argv[1], sys.argv[2]) if len(sys.argv) > 2 else ("Arsenal", "Chelsea")
-    print(json.dumps(compute_prediction(h, a), indent=2))
+    print(json.dumps(compute_prediction(h, a, league_arg), indent=2))
