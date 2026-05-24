@@ -11,7 +11,7 @@ import bundesligaTeams from "@/data/bundesliga/teams.json";
 import serieaTeams from "@/data/seriea/teams.json";
 import ligue1Teams from "@/data/ligue1/teams.json";
 
-// La Liga uses mainland-Spain bounds — Canary Islands (Las Palmas at 28°N) are excluded.
+// La Liga: mainland-Spain bounds only (Canary Islands excluded)
 const REGIONS: Record<string, { lat: { min: number; max: number }; lng: { min: number; max: number } }> = {
   pl:         { lat: { min: 50.3, max: 55.3 }, lng: { min: -5.8, max:  3.8 } },
   laliga:     { lat: { min: 36.0, max: 43.9 }, lng: { min: -9.1, max:  3.2 } },
@@ -19,6 +19,15 @@ const REGIONS: Record<string, { lat: { min: number; max: number }; lng: { min: n
   seriea:     { lat: { min: 38.5, max: 46.6 }, lng: { min:  6.5, max: 18.8 } },
   ligue1:     { lat: { min: 41.4, max: 51.2 }, lng: { min: -5.5, max:  9.5 } },
   europe:     { lat: { min: 36.5, max: 56.0 }, lng: { min: -9.5, max: 19.5 } },
+};
+
+// ISO-3166-1 alpha-3 codes used by DottedMap's countries filter
+const LEAGUE_COUNTRY: Record<string, string> = {
+  pl:         "GBR",
+  laliga:     "ESP",
+  bundesliga: "DEU",
+  seriea:     "ITA",
+  ligue1:     "FRA",
 };
 
 const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
@@ -40,49 +49,77 @@ const LEAGUE_NAMES: Record<string, string> = {
 type Point = { x: number; y: number };
 type Pin   = { team: TeamMeta; leagueId: string; x: number; y: number };
 
-// ─── Lazy map cache ──────────────────────────────────────────────────────────
-const _mapCache:  Record<string, DottedMap> = {};
-const _pinsCache: Record<string, { pins: Pin[]; bgPoints: Point[] }> = {};
+// ─── Dot path builder ────────────────────────────────────────────────────────
+// Collapses N dots into a single SVG path — huge DOM reduction vs <circle> per dot.
+function buildPath(points: Point[], r: number): string {
+  return points
+    .map(({ x, y }) => `M${x - r},${y}a${r},${r},0,1,0,${r * 2},0a${r},${r},0,1,0,${-r * 2},0`)
+    .join("");
+}
 
-function getLeagueData(league: string): { pins: Pin[]; bgPoints: Point[] } {
-  if (_pinsCache[league]) return _pinsCache[league];
-  const map = new DottedMap({ height: 65, grid: "diagonal", region: REGIONS[league] });
-  _mapCache[league] = map;
-  const bgPoints = map.getPoints();
-  const teams = Object.values(ALL_TEAMS[league] ?? {});
+// ─── Lazy map cache ──────────────────────────────────────────────────────────
+// Everything is computed on first access and stored; nothing runs at import time.
+
+interface LeagueCacheEntry {
+  map:         DottedMap;
+  bgPath:      string;   // all dots in the league's region (faint background)
+  countryPath: string;   // dots inside the country only (highlighted land mass)
+  pins:        Pin[];
+}
+
+const _leagueCache: Partial<Record<string, LeagueCacheEntry>> = {};
+
+function getLeagueCache(leagueId: string): LeagueCacheEntry {
+  const cached = _leagueCache[leagueId];
+  if (cached) return cached;
+
+  const region  = REGIONS[leagueId];
+  const country = LEAGUE_COUNTRY[leagueId];
+
+  const map         = new DottedMap({ height: 65, grid: "diagonal", region });
+  const countryMap  = new DottedMap({ height: 65, grid: "diagonal", region, countries: [country] });
+
+  const bgPath      = buildPath(map.getPoints(), 0.2);
+  const countryPath = buildPath(countryMap.getPoints(), 0.2);
+
+  const teams = Object.values(ALL_TEAMS[leagueId] ?? {});
   const pins: Pin[] = teams
     .map((team) => {
       if (team.lat == null || team.lng == null) return null;
       const pin = map.getPin({ lat: team.lat, lng: team.lng });
-      return pin ? { team, leagueId: league, x: pin.x, y: pin.y } : null;
+      return pin ? { team, leagueId, x: pin.x, y: pin.y } : null;
     })
     .filter((p): p is Pin => p !== null);
-  _pinsCache[league] = { pins, bgPoints };
-  return _pinsCache[league];
+
+  const entry: LeagueCacheEntry = { map, bgPath, countryPath, pins };
+  _leagueCache[leagueId] = entry;
+  return entry;
 }
 
-// Europe background dots
-let _europePoints: Point[] | null = null;
-function getEuropeMap(): DottedMap {
-  if (_mapCache.europe) return _mapCache.europe;
-  const map = new DottedMap({ height: 65, grid: "diagonal", region: REGIONS.europe });
-  _mapCache.europe = map;
-  _europePoints = map.getPoints();
-  return map;
+// ─── Europe cache ─────────────────────────────────────────────────────────────
+
+interface EuropeCacheEntry {
+  map:          DottedMap;
+  bgPath:       string;                    // all-Europe background dots
+  countryPaths: Record<string, string>;   // per-league country dots
+  pins:         Pin[];                     // all 142 team pins
 }
-function getEuropePoints(): Point[] {
-  if (!_europePoints) {
-    const map = getEuropeMap();
-    _europePoints = map.getPoints();
+
+let _europeCache: EuropeCacheEntry | null = null;
+
+function getEuropeCache(): EuropeCacheEntry {
+  if (_europeCache) return _europeCache;
+
+  const region = REGIONS.europe;
+  const map    = new DottedMap({ height: 65, grid: "diagonal", region });
+  const bgPath = buildPath(map.getPoints(), 0.18);
+
+  const countryPaths: Record<string, string> = {};
+  for (const [leagueId, countryCode] of Object.entries(LEAGUE_COUNTRY)) {
+    const cm = new DottedMap({ height: 65, grid: "diagonal", region, countries: [countryCode] });
+    countryPaths[leagueId] = buildPath(cm.getPoints(), 0.18);
   }
-  return _europePoints;
-}
 
-// All 142 team pins projected onto the Europe map coordinate space
-let _europePins: Pin[] | null = null;
-function getEuropePins(): Pin[] {
-  if (_europePins) return _europePins;
-  const map = getEuropeMap();
   const pins: Pin[] = [];
   for (const leagueId of Object.keys(ALL_TEAMS)) {
     for (const team of Object.values(ALL_TEAMS[leagueId])) {
@@ -91,13 +128,15 @@ function getEuropePins(): Pin[] {
       if (pin) pins.push({ team, leagueId, x: pin.x, y: pin.y });
     }
   }
-  _europePins = pins;
-  return pins;
+
+  _europeCache = { map, bgPath, countryPaths, pins };
+  return _europeCache;
 }
 
 // ─── ViewBox ─────────────────────────────────────────────────────────────────
-function computeViewBox(points: Point[], extraPts: Point[], targetRatio: number) {
-  const all = [...points, ...extraPts];
+
+function computeViewBox(bgPoints: Point[], extraPts: Point[], targetRatio: number) {
+  const all = [...bgPoints, ...extraPts];
   const PAD = 1.5;
   let minX = Math.min(...all.map((p) => p.x)) - PAD;
   let minY = Math.min(...all.map((p) => p.y)) - PAD;
@@ -117,14 +156,8 @@ function computeViewBox(points: Point[], extraPts: Point[], targetRatio: number)
   return { minX, minY, VW, VH };
 }
 
-// Collapse all dots into a single SVG path — far fewer DOM nodes than individual <circle> elements.
-function buildDotPath(points: Point[], r: number): string {
-  return points
-    .map(({ x, y }) => `M${x - r},${y}a${r},${r},0,1,0,${r * 2},0a${r},${r},0,1,0,${-r * 2},0`)
-    .join("");
-}
-
 // ─── Component ───────────────────────────────────────────────────────────────
+
 interface TeamMapProps {
   league?: string;
   homeTeam?: string | null;
@@ -145,28 +178,39 @@ export function TeamMap({
   const [hovered, setHovered] = useState<string | null>(null);
   const isEurope = league === "europe";
 
-  const { pins, bgPoints } = useMemo(() => {
-    if (isEurope) return { pins: getEuropePins(), bgPoints: getEuropePoints() };
-    return getLeagueData(league);
+  // ── Build or retrieve cached data ─────────────────────────────────────────
+  const { bgPath, overlayPaths, pins, rawPoints } = useMemo(() => {
+    if (isEurope) {
+      const c = getEuropeCache();
+      return {
+        bgPath:       c.bgPath,
+        overlayPaths: Object.values(c.countryPaths), // 5 paths, one per country
+        pins:         c.pins,
+        rawPoints:    c.map.getPoints(),
+      };
+    }
+    const c = getLeagueCache(league);
+    return {
+      bgPath:       c.bgPath,
+      overlayPaths: [c.countryPath],
+      pins:         c.pins,
+      rawPoints:    c.map.getPoints(),
+    };
   }, [league, isEurope]);
 
   const targetRatio = isEurope ? 5 / 4 : 4 / 3;
-
   const { minX, minY, VW, VH } = useMemo(
-    () => computeViewBox(bgPoints, pins, targetRatio),
+    () => computeViewBox(rawPoints, pins, targetRatio),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [league]
   );
-
-  // Single path string for all background dots — computed once per league
-  const dotPath = useMemo(() => buildDotPath(bgPoints, 0.18), [bgPoints]);
 
   function toPercent(x: number, y: number) {
     return { left: ((x - minX) / VW) * 100, top: ((y - minY) / VH) * 100 };
   }
 
-  // Europe pins are smaller so 142 logos don't crowd each other
-  const PIN_SIZE = isEurope ? 14 : 22;
+  // League view logos are larger — they're the focus of the map.
+  const PIN_SIZE = isEurope ? 14 : 28;
 
   const hoveredPin = hovered ? pins.find((p) => p.team.name === hovered) ?? null : null;
 
@@ -181,21 +225,26 @@ export function TeamMap({
 
   return (
     <div className="relative w-full select-none">
-      {/* Dot background — one path node instead of thousands of <circle> nodes */}
+      {/* Dot background — two layers: faint all-region + brighter country shape */}
       <svg viewBox={`${minX} ${minY} ${VW} ${VH}`} className="w-full h-auto" aria-hidden="true">
-        <path d={dotPath} fill="rgba(148,163,184,0.10)" />
+        {/* Faint ocean / non-country dots */}
+        <path d={bgPath} fill="rgba(148,163,184,0.07)" />
+        {/* Country highlight dots — same grid, visually creates country shape */}
+        {overlayPaths.map((path, i) => (
+          <path key={i} d={path} fill="rgba(148,163,184,0.30)" />
+        ))}
       </svg>
 
       {/* Team pins */}
       {pins.map((pin) => {
-        const pos = toPercent(pin.x, pin.y);
-        const isHome = pin.team.name === homeTeam;
-        const isAway = pin.team.name === awayTeam;
+        const pos      = toPercent(pin.x, pin.y);
+        const isHome   = pin.team.name === homeTeam;
+        const isAway   = pin.team.name === awayTeam;
         const isSelected = isHome || isAway;
-        const isHov = hovered === pin.team.name;
+        const isHov    = hovered === pin.team.name;
         const anySelected = !!(homeTeam || awayTeam);
-        const dimmed = anySelected && !isSelected && !isHov;
-        const src = teamLogoSrc(pin.team);
+        const dimmed   = anySelected && !isSelected && !isHov;
+        const src      = teamLogoSrc(pin.team);
 
         return (
           <div
@@ -212,7 +261,7 @@ export function TeamMap({
             onMouseLeave={() => setHovered(null)}
             onClick={() => handleClick(pin)}
           >
-            {/* Hit area — larger than the visible logo for easier clicking */}
+            {/* Invisible hit area — larger than logo for easier clicking */}
             <div className="flex items-center justify-center" style={{ width: PIN_SIZE + 14, height: PIN_SIZE + 14 }}>
               <div
                 className={`flex items-center justify-center rounded-full transition-all duration-150 ${
@@ -253,7 +302,7 @@ export function TeamMap({
               </div>
             </div>
 
-            {/* HOME / AWAY badge — only for selected pins */}
+            {/* HOME / AWAY badge below selected pins */}
             {isSelected && (
               <div
                 className={`absolute top-full left-1/2 mt-0.5 -translate-x-1/2 rounded px-1.5 py-px text-[8px] font-bold text-white whitespace-nowrap ${
@@ -275,7 +324,7 @@ export function TeamMap({
         style={{ zIndex: 50 }}
       >
         {hoveredPin && (() => {
-          const src = teamLogoSrc(hoveredPin.team);
+          const src    = teamLogoSrc(hoveredPin.team);
           const isHome = hoveredPin.team.name === homeTeam;
           const isAway = hoveredPin.team.name === awayTeam;
           return (
