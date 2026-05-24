@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Activity,
   GalleryVerticalEnd,
@@ -7,36 +9,44 @@ import {
 } from "lucide-react";
 import { TeamMap } from "@/components/team-map";
 import { AccuracyChart } from "@/components/accuracy-chart";
-import meta from "@/data/pl/meta.json";
 import { teamLogoSrc, formatSeason } from "@/lib/types";
-import teamsData from "@/data/pl/teams.json";
+import { useLeague } from "@/lib/league-context";
 import type { TeamMeta } from "@/lib/types";
 
-const teamByName = new Map(
-  (Object.values(teamsData) as TeamMeta[]).map((t) => [t.name, t]),
-);
+import plMeta     from "@/data/pl/meta.json";
+import laligaMeta from "@/data/laliga/meta.json";
+import bundesligaMeta from "@/data/bundesliga/meta.json";
+import serieaMeta from "@/data/seriea/meta.json";
+import ligue1Meta from "@/data/ligue1/meta.json";
 
-function ResultCrest({ name }: { name: string }) {
-  const team = teamByName.get(name);
+import plTeams         from "@/data/pl/teams.json";
+import laligaTeams     from "@/data/laliga/teams.json";
+import bundesligaTeams from "@/data/bundesliga/teams.json";
+import serieaTeams     from "@/data/seriea/teams.json";
+import ligue1Teams     from "@/data/ligue1/teams.json";
+
+const ALL_META: Record<string, typeof plMeta> = {
+  pl: plMeta, laliga: laligaMeta, bundesliga: bundesligaMeta,
+  seriea: serieaMeta, ligue1: ligue1Meta,
+};
+
+const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
+  pl:         plTeams         as Record<string, TeamMeta>,
+  laliga:     laligaTeams     as Record<string, TeamMeta>,
+  bundesliga: bundesligaTeams as Record<string, TeamMeta>,
+  seriea:     serieaTeams     as Record<string, TeamMeta>,
+  ligue1:     ligue1Teams     as Record<string, TeamMeta>,
+};
+
+function ResultCrest({ name, league }: { name: string; league: string }) {
+  const team = ALL_TEAMS[league]?.[name];
   const src = team ? teamLogoSrc(team) : null;
   if (!src) return null;
   /* eslint-disable-next-line @next/next/no-img-element */
-  return (
-    <img
-      src={src}
-      alt={name}
-      className="h-5 w-5 object-contain"
-    />
-  );
+  return <img src={src} alt={name} className="h-5 w-5 object-contain" />;
 }
 
-function QuadrantHeader({
-  icon,
-  label,
-}: {
-  icon: React.ReactNode;
-  label: string;
-}) {
+function QuadrantHeader({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
       {icon}
@@ -46,9 +56,10 @@ function QuadrantHeader({
 }
 
 export function FeaturedSection() {
+  const { league } = useLeague();
+  const meta = ALL_META[league] ?? plMeta;
   const recent = meta.recentResults.slice(0, 6);
 
-  // Log-loss improvement over the majority-class baseline (lower is better)
   const baseline = meta.metrics.dummy_log_loss;
   const model = meta.metrics.model_log_loss;
   const improvement = Math.round(((baseline - model) / baseline) * 100);
@@ -71,30 +82,24 @@ export function FeaturedSection() {
         <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-border md:grid-cols-2">
           {/* 1. Stadium map */}
           <div className="border-b border-border bg-card p-6 md:border-r">
-            <QuadrantHeader
-              icon={<MapPin className="h-4 w-4" />}
-              label="Stadium network"
-            />
+            <QuadrantHeader icon={<MapPin className="h-4 w-4" />} label="Stadium network" />
             <h3 className="mt-3 text-xl font-semibold">
               Every ground, mapped.{" "}
               <span className="font-normal text-muted-foreground">
-                {meta.teamCount} Premier League clubs feed the England model.
+                {meta.teamCount} clubs feed the {meta.leagueName} model.
               </span>
             </h3>
             <div className="relative mt-4">
-              <TeamMap />
+              <TeamMap league={league} />
               <div className="absolute right-2 top-2 rounded-md border border-border bg-background/80 px-2.5 py-1 text-xs font-medium backdrop-blur">
                 {meta.teamCount} clubs · {meta.totalMatches.toLocaleString()} matches
               </div>
             </div>
           </div>
 
-          {/* 2. Methodology / recent results feed */}
+          {/* 2. Recent results feed */}
           <div className="flex flex-col border-b border-border bg-card p-6">
-            <QuadrantHeader
-              icon={<GalleryVerticalEnd className="h-4 w-4" />}
-              label="Methodology"
-            />
+            <QuadrantHeader icon={<GalleryVerticalEnd className="h-4 w-4" />} label="Methodology" />
             <h3 className="mt-3 text-xl font-semibold">
               Trained on real results.{" "}
               <span className="font-normal text-muted-foreground">
@@ -104,8 +109,7 @@ export function FeaturedSection() {
             <div className="relative mt-4 flex-1">
               <div className="space-y-2">
                 {recent.map((m, i) => {
-                  const winner =
-                    m.ftr === "H" ? m.home : m.ftr === "A" ? m.away : null;
+                  const winner = m.ftr === "H" ? m.home : m.ftr === "A" ? m.away : null;
                   return (
                     <div
                       key={i}
@@ -119,11 +123,11 @@ export function FeaturedSection() {
                         })}
                       </span>
                       <div className="flex flex-1 items-center justify-center gap-2 text-sm">
-                        <ResultCrest name={m.home} />
+                        <ResultCrest name={m.home} league={league} />
                         <span className="font-mono font-semibold">
                           {m.fthg}-{m.ftag}
                         </span>
-                        <ResultCrest name={m.away} />
+                        <ResultCrest name={m.away} league={league} />
                       </div>
                       <span className="w-14 text-right text-xs text-muted-foreground">
                         {winner ? winner.split(" ")[0] : "Draw"}
@@ -138,10 +142,7 @@ export function FeaturedSection() {
 
           {/* 3. Accuracy chart */}
           <div className="border-b border-border bg-card p-6 md:border-r md:border-b-0">
-            <QuadrantHeader
-              icon={<Activity className="h-4 w-4" />}
-              label="Model performance"
-            />
+            <QuadrantHeader icon={<Activity className="h-4 w-4" />} label="Model performance" />
             <h3 className="mt-3 text-xl font-semibold">
               Accuracy through the {formatSeason(meta.testSeasons[0])} season.{" "}
               <span className="font-normal text-muted-foreground">
@@ -155,12 +156,8 @@ export function FeaturedSection() {
 
           {/* 4. Stats cards */}
           <div className="grid bg-card sm:grid-cols-2">
-            {/* Card A: model vs baseline */}
             <div className="flex flex-col gap-3 border-border p-6 [&:not(:last-child)]:border-b sm:[&:not(:last-child)]:border-b-0 sm:[&:not(:last-child)]:border-r">
-              <QuadrantHeader
-                icon={<BarChart3 className="h-4 w-4" />}
-                label="Beats the baseline"
-              />
+              <QuadrantHeader icon={<BarChart3 className="h-4 w-4" />} label="Beats the baseline" />
               <p className="mt-1 text-base font-semibold leading-snug">
                 {accuracy}% test accuracy.{" "}
                 <span className="font-normal text-muted-foreground">
@@ -170,9 +167,7 @@ export function FeaturedSection() {
               </p>
               <div className="mt-auto grid grid-cols-2 gap-2 pt-2">
                 <div className="rounded-lg border border-border bg-background px-3 py-2 text-center">
-                  <div className="text-lg font-bold tabular-nums text-primary">
-                    {accuracy}%
-                  </div>
+                  <div className="text-lg font-bold tabular-nums text-primary">{accuracy}%</div>
                   <div className="text-[10px] text-muted-foreground">ML model</div>
                 </div>
                 <div className="rounded-lg border border-border bg-background px-3 py-2 text-center">
@@ -188,12 +183,8 @@ export function FeaturedSection() {
               </div>
             </div>
 
-            {/* Card B: feature breakdown */}
             <div className="flex flex-col gap-3 p-6">
-              <QuadrantHeader
-                icon={<Layers className="h-4 w-4" />}
-                label="12 inputs"
-              />
+              <QuadrantHeader icon={<Layers className="h-4 w-4" />} label="12 inputs" />
               <p className="mt-1 text-base font-semibold leading-snug">
                 6 form stats, doubled.{" "}
                 <span className="font-normal text-muted-foreground">

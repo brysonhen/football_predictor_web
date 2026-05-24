@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeftRight, Loader2, TrendingUp } from "lucide-react";
 import { teamLogoSrc, type PredictionResult, type TeamForm, type TeamMeta } from "@/lib/types";
+import { useLeague } from "@/lib/league-context";
 import {
   Select,
   SelectContent,
@@ -152,7 +153,7 @@ function ProbabilityBar({ home, draw, away }: { home: number; draw: number; away
 }
 
 export function Predictor() {
-  const [league, setLeague] = useState("pl");
+  const { league, setLeague } = useLeague();
   const [home, setHome] = useState(LEAGUE_DATA.pl.home);
   const [away, setAway] = useState(LEAGUE_DATA.pl.away);
   const [result, setResult] = useState<PredictionResult | null>(null);

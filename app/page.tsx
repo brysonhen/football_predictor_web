@@ -1,6 +1,7 @@
 import { Code, Target, TrendingUp } from "lucide-react";
 import { Predictor } from "@/components/predictor";
 import { FeaturedSection } from "@/components/featured-section";
+import { LeagueProvider } from "@/lib/league-context";
 import { Button } from "@/components/ui/button";
 
 const GITHUB_URL = "https://github.com/brysonhen/football_matchup_predictor";
@@ -86,22 +87,24 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Predictor */}
-        <section className="mx-auto max-w-3xl px-6 pb-20">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold tracking-tight">
-              Pick a fixture
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Choose a home and away team to see the model&apos;s prediction,
-              the factors behind it, and how the clubs have fared before.
-            </p>
-          </div>
-          <Predictor />
-        </section>
+        {/* Predictor + featured section share league state */}
+        <LeagueProvider>
+          <section className="mx-auto max-w-3xl px-6 pb-20">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold tracking-tight">
+                Pick a fixture
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Choose a league and fixture to see the model&apos;s prediction,
+                the factors behind it, and how the clubs have fared before.
+              </p>
+            </div>
+            <Predictor />
+          </section>
 
-        {/* Featured section */}
-        <FeaturedSection />
+          {/* Featured section */}
+          <FeaturedSection />
+        </LeagueProvider>
       </main>
 
       {/* Footer */}

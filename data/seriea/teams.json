@@ -2,114 +2,236 @@
   "Atalanta": {
     "name": "Atalanta",
     "stadium": "New Balance Arena",
-    "city": "Bergamo, Italy"
+    "city": "Bergamo, Italy",
+    "lat": 45.7052,
+    "lng": 9.68,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/105.png"
   },
   "Benevento": {
-    "name": "Benevento"
+    "name": "Benevento",
+    "lat": 41.1341,
+    "lng": 14.7854,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Bologna": {
     "name": "Bologna",
     "stadium": "Stadio Renato Dall'Ara",
-    "city": "Bologna, Emilia-Romagna"
+    "city": "Bologna, Emilia-Romagna",
+    "lat": 44.4929,
+    "lng": 11.3097,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/107.png"
   },
   "Brescia": {
-    "name": "Brescia"
+    "name": "Brescia",
+    "lat": 45.5348,
+    "lng": 10.2397,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Brescia_through_the_ages_2025.jpg/120px-Brescia_through_the_ages_2025.jpg"
   },
   "Cagliari": {
     "name": "Cagliari",
     "stadium": "Unipol Domus",
-    "city": "Cagliari, Italy"
+    "city": "Cagliari, Italy",
+    "lat": 39.2077,
+    "lng": 9.1247,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/2925.png"
   },
   "Como": {
     "name": "Como",
     "stadium": "Stadio Giuseppe Sinigaglia",
-    "city": "Como, Italy"
+    "city": "Como, Italy",
+    "lat": 45.8114,
+    "lng": 9.0895,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/2572.png"
   },
   "Cremonese": {
     "name": "Cremonese",
     "stadium": "Stadio Giovanni Zini",
-    "city": "Cremona, Italy"
+    "city": "Cremona, Italy",
+    "lat": 45.1347,
+    "lng": 10.0256,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/4050.png"
   },
   "Crotone": {
-    "name": "Crotone"
+    "name": "Crotone",
+    "lat": 39.0797,
+    "lng": 17.1342,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Empoli": {
-    "name": "Empoli"
+    "name": "Empoli",
+    "lat": 43.7219,
+    "lng": 10.953,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Fiorentina": {
     "name": "Fiorentina",
     "stadium": "Stadio Artemio Franchi",
-    "city": "Florence, Italy"
+    "city": "Florence, Italy",
+    "lat": 43.7798,
+    "lng": 11.282,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/109.png"
   },
   "Frosinone": {
-    "name": "Frosinone"
+    "name": "Frosinone",
+    "lat": 41.6371,
+    "lng": 13.3528,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Genoa": {
     "name": "Genoa",
     "stadium": "Stadio Luigi Ferraris",
-    "city": "Genoa, Italy"
+    "city": "Genoa, Italy",
+    "lat": 44.4169,
+    "lng": 8.9531,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/3263.png"
   },
   "Inter": {
     "name": "Inter",
     "stadium": "Stadio Giuseppe Meazza",
-    "city": "Milan, Italy"
+    "city": "Milan, Italy",
+    "lat": 45.478,
+    "lng": 9.1238,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/110.png"
   },
   "Juventus": {
-    "name": "Juventus"
+    "name": "Juventus",
+    "lat": 45.1097,
+    "lng": 7.6413,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/111.png"
   },
   "Lazio": {
-    "name": "Lazio"
+    "name": "Lazio",
+    "lat": 41.9339,
+    "lng": 12.4544,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png"
   },
   "Lecce": {
-    "name": "Lecce"
+    "name": "Lecce",
+    "lat": 40.3516,
+    "lng": 18.1799,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/113.png"
   },
   "Milan": {
     "name": "Milan",
     "stadium": "Stadio Giuseppe Meazza",
-    "city": "San Siro, Milan"
+    "city": "San Siro, Milan",
+    "lat": 45.478,
+    "lng": 9.1238,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/103.png"
   },
   "Monza": {
-    "name": "Monza"
+    "name": "Monza",
+    "lat": 45.6163,
+    "lng": 9.2762,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Napoli": {
-    "name": "Napoli"
+    "name": "Napoli",
+    "lat": 40.8279,
+    "lng": 14.1932,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/114.png"
   },
   "Parma": {
-    "name": "Parma"
+    "name": "Parma",
+    "lat": 44.7973,
+    "lng": 10.3333,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/115.png"
   },
   "Pisa": {
-    "name": "Pisa"
+    "name": "Pisa",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/3956.png"
   },
   "Roma": {
-    "name": "Roma"
+    "name": "Roma",
+    "lat": 41.9339,
+    "lng": 12.4544,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/104.png"
   },
   "Salernitana": {
-    "name": "Salernitana"
+    "name": "Salernitana",
+    "lat": 40.6732,
+    "lng": 14.7681,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Salernitana_through_the_ages_2025.jpg/120px-Salernitana_through_the_ages_2025.jpg"
   },
   "Sampdoria": {
-    "name": "Sampdoria"
+    "name": "Sampdoria",
+    "lat": 44.4169,
+    "lng": 8.9531,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Sassuolo": {
-    "name": "Sassuolo"
+    "name": "Sassuolo",
+    "lat": 44.6877,
+    "lng": 10.9147,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/3997.png"
   },
   "Spal": {
-    "name": "Spal"
+    "name": "Spal",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Spezia": {
-    "name": "Spezia"
+    "name": "Spezia",
+    "lat": 44.1153,
+    "lng": 9.829,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Torino": {
-    "name": "Torino"
+    "name": "Torino",
+    "lat": 45.0407,
+    "lng": 7.65,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/239.png"
   },
   "Udinese": {
-    "name": "Udinese"
+    "name": "Udinese",
+    "lat": 46.0849,
+    "lng": 13.2208,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/118.png"
   },
   "Venezia": {
-    "name": "Venezia"
+    "name": "Venezia",
+    "lat": 45.4654,
+    "lng": 12.2875,
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Verona": {
     "name": "Verona",
     "stadium": "Stadio Marcantonio Bentegodi",
-    "city": "Verona, Italy"
+    "city": "Verona, Italy",
+    "lat": 45.4341,
+    "lng": 10.9659,
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/119.png"
   }
 }

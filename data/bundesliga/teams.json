@@ -2,100 +2,159 @@
   "Augsburg": {
     "name": "Augsburg",
     "stadium": "WWK Arena",
-    "city": "Augsburg, Germany"
+    "city": "Augsburg, Germany",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/3841.png"
   },
   "Bayern Munich": {
     "name": "Bayern Munich",
     "stadium": "Allianz Arena",
-    "city": "Munich, Germany"
+    "city": "Munich, Germany",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png"
   },
   "Bielefeld": {
-    "name": "Bielefeld"
+    "name": "Bielefeld",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Bochum": {
-    "name": "Bochum"
+    "name": "Bochum",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/VfL_Bochum_logo.svg/120px-VfL_Bochum_logo.svg.png"
   },
   "Darmstadt": {
-    "name": "Darmstadt"
+    "name": "Darmstadt",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Dortmund": {
     "name": "Dortmund",
     "stadium": "Signal Iduna Park",
-    "city": "Dortmund, Germany"
+    "city": "Dortmund, Germany",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/124.png"
   },
   "Ein Frankfurt": {
     "name": "Ein Frankfurt",
     "stadium": "Deutsche Bank Park",
-    "city": "Frankfurt, Germany"
+    "city": "Frankfurt, Germany",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png"
   },
   "FC Koln": {
     "name": "FC Koln",
     "stadium": "WWK Arena",
-    "city": "Augsburg, Germany"
+    "city": "Augsburg, Germany",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/1._FC_Koeln_Logo_2014%E2%80%93.svg/120px-1._FC_Koeln_Logo_2014%E2%80%93.svg.png"
   },
   "Fortuna Dusseldorf": {
-    "name": "Fortuna Dusseldorf"
+    "name": "Fortuna Dusseldorf",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/120px-Fortuna_D%C3%BCsseldorf.svg.png"
   },
   "Freiburg": {
     "name": "Freiburg",
     "stadium": "Europa-Park Stadion",
-    "city": "Freiburg im Breisgau, Baden-W\u00fcrttemberg"
+    "city": "Freiburg im Breisgau, Baden-W\u00fcrttemberg",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/126.png"
   },
   "Greuther Furth": {
-    "name": "Greuther Furth"
+    "name": "Greuther Furth",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "Hamburg": {
     "name": "Hamburg",
     "stadium": "Volksparkstadion",
-    "city": "Hamburg, Germany"
+    "city": "Hamburg, Germany",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/127.png"
   },
   "Heidenheim": {
     "name": "Heidenheim",
     "stadium": "Voith-Arena",
-    "city": "Heidenheim, Germany"
+    "city": "Heidenheim, Germany",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/6418.png"
   },
   "Hertha": {
-    "name": "Hertha"
+    "name": "Hertha",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/120px-Hertha_BSC_Logo_2012.svg.png"
   },
   "Hoffenheim": {
-    "name": "Hoffenheim"
+    "name": "Hoffenheim",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/7911.png"
   },
   "Holstein Kiel": {
-    "name": "Holstein Kiel"
+    "name": "Holstein Kiel",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Holstein_Kiel_Logo.svg/120px-Holstein_Kiel_Logo.svg.png"
   },
   "Leverkusen": {
     "name": "Leverkusen",
     "stadium": "BayArena",
-    "city": "Leverkusen, Germany"
+    "city": "Leverkusen, Germany",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/131.png"
   },
   "M'gladbach": {
-    "name": "M'gladbach"
+    "name": "M'gladbach",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png"
   },
   "Mainz": {
-    "name": "Mainz"
+    "name": "Mainz",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/2950.png"
   },
   "Paderborn": {
-    "name": "Paderborn"
+    "name": "Paderborn",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England"
   },
   "RB Leipzig": {
-    "name": "RB Leipzig"
+    "name": "RB Leipzig",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/11420.png"
   },
   "Schalke 04": {
-    "name": "Schalke 04"
+    "name": "Schalke 04",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/FC_Schalke_04_Logo.svg/120px-FC_Schalke_04_Logo.svg.png"
   },
   "St Pauli": {
-    "name": "St Pauli"
+    "name": "St Pauli",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/270.png"
   },
   "Stuttgart": {
-    "name": "Stuttgart"
+    "name": "Stuttgart",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/134.png"
   },
   "Union Berlin": {
-    "name": "Union Berlin"
+    "name": "Union Berlin",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/598.png"
   },
   "Werder Bremen": {
-    "name": "Werder Bremen"
+    "name": "Werder Bremen",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/137.png"
   },
   "Wolfsburg": {
-    "name": "Wolfsburg"
+    "name": "Wolfsburg",
+    "stadium": "Emirates Stadium",
+    "city": "Holloway, London, England",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/138.png"
   }
 }
