@@ -17,55 +17,55 @@
   "metrics": {
     "dummy_log_loss": 1.0833,
     "form_log_loss": 1.0723,
-    "model_log_loss": 1.05,
-    "model_accuracy": 0.4639
+    "model_log_loss": 1.0315,
+    "model_accuracy": 0.5
   },
   "confusionMatrix": [
     [
-      73,
-      35,
-      34
+      103,
+      4,
+      35
     ],
     [
-      36,
-      27,
-      27
+      52,
+      7,
+      31
     ],
     [
-      29,
-      32,
-      67
+      50,
+      8,
+      70
     ]
   ],
   "monthlyAccuracy": [
     {
       "month": "2025-08",
-      "accuracy": 0.5,
+      "accuracy": 0.611,
       "matches": 18
     },
     {
       "month": "2025-09",
-      "accuracy": 0.481,
+      "accuracy": 0.519,
       "matches": 27
     },
     {
       "month": "2025-10",
-      "accuracy": 0.389,
+      "accuracy": 0.417,
       "matches": 36
     },
     {
       "month": "2025-11",
-      "accuracy": 0.395,
+      "accuracy": 0.526,
       "matches": 38
     },
     {
       "month": "2025-12",
-      "accuracy": 0.405,
+      "accuracy": 0.459,
       "matches": 37
     },
     {
       "month": "2026-01",
-      "accuracy": 0.569,
+      "accuracy": 0.483,
       "matches": 58
     },
     {
@@ -75,7 +75,7 @@
     },
     {
       "month": "2026-03",
-      "accuracy": 0.361,
+      "accuracy": 0.5,
       "matches": 36
     },
     {
@@ -85,7 +85,7 @@
     },
     {
       "month": "2026-05",
-      "accuracy": 0.4,
+      "accuracy": 0.467,
       "matches": 30
     }
   ],

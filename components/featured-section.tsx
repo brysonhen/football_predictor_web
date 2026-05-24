@@ -1,59 +1,35 @@
 "use client";
 
-import {
-  Activity,
-  GalleryVerticalEnd,
-  MapPin,
-  BarChart3,
-  Layers,
-  Globe,
-} from "lucide-react";
-import { TeamMap } from "@/components/team-map";
+import { Activity, BarChart3, Layers, TrendingUp } from "lucide-react";
 import { AccuracyChart } from "@/components/accuracy-chart";
-import { teamLogoSrc, formatSeason } from "@/lib/types";
-import { useLeague } from "@/lib/league-context";
-import type { TeamMeta } from "@/lib/types";
+import { formatSeason } from "@/lib/types";
 
-import plMeta     from "@/data/pl/meta.json";
-import laligaMeta from "@/data/laliga/meta.json";
+import plMeta         from "@/data/pl/meta.json";
+import laligaMeta     from "@/data/laliga/meta.json";
 import bundesligaMeta from "@/data/bundesliga/meta.json";
-import serieaMeta from "@/data/seriea/meta.json";
-import ligue1Meta from "@/data/ligue1/meta.json";
+import serieaMeta     from "@/data/seriea/meta.json";
+import ligue1Meta     from "@/data/ligue1/meta.json";
 
-import plTeams         from "@/data/pl/teams.json";
-import laligaTeams     from "@/data/laliga/teams.json";
-import bundesligaTeams from "@/data/bundesliga/teams.json";
-import serieaTeams     from "@/data/seriea/teams.json";
-import ligue1Teams     from "@/data/ligue1/teams.json";
-
-const ALL_META: Record<string, typeof plMeta> = {
+const ALL_META = {
   pl: plMeta, laliga: laligaMeta, bundesliga: bundesligaMeta,
   seriea: serieaMeta, ligue1: ligue1Meta,
 };
 
-const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
-  pl:         plTeams         as Record<string, TeamMeta>,
-  laliga:     laligaTeams     as Record<string, TeamMeta>,
-  bundesliga: bundesligaTeams as Record<string, TeamMeta>,
-  seriea:     serieaTeams     as Record<string, TeamMeta>,
-  ligue1:     ligue1Teams     as Record<string, TeamMeta>,
-};
+const LEAGUE_DISPLAY = [
+  { id: "pl",         name: "Premier League",  flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
+  { id: "laliga",     name: "La Liga",          flag: "🇪🇸" },
+  { id: "bundesliga", name: "Bundesliga",       flag: "🇩🇪" },
+  { id: "seriea",     name: "Serie A",          flag: "🇮🇹" },
+  { id: "ligue1",     name: "Ligue 1",          flag: "🇫🇷" },
+];
 
-// Aggregate stats across all 5 leagues
-const TOTAL_CLUBS   = Object.values(ALL_TEAMS).reduce((n, t) => n + Object.keys(t).length, 0);
-const TOTAL_MATCHES = Object.values(ALL_META).reduce((n, m) => n + m.totalMatches, 0);
-const AVG_ACCURACY  = Math.round(
+// Aggregate across all 5 leagues
+const totalMatches = Object.values(ALL_META).reduce((n, m) => n + m.totalMatches, 0);
+const totalClubs   = Object.values(ALL_META).reduce((n, m) => n + m.teamCount, 0);
+const avgAccuracy  = Math.round(
   Object.values(ALL_META).reduce((n, m) => n + m.metrics.model_accuracy, 0) /
   Object.values(ALL_META).length * 100
 );
-
-function ResultCrest({ name, league }: { name: string; league: string }) {
-  const team = ALL_TEAMS[league]?.[name];
-  const src = team ? teamLogoSrc(team) : null;
-  if (!src) return null;
-  /* eslint-disable-next-line @next/next/no-img-element */
-  return <img src={src} alt={name} className="h-5 w-5 object-contain" />;
-}
 
 function QuadrantHeader({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
@@ -65,131 +41,122 @@ function QuadrantHeader({ icon, label }: { icon: React.ReactNode; label: string 
 }
 
 export function FeaturedSection() {
-  const { league, hasInteracted } = useLeague();
-
-  // Show europe overview until user picks a league; fall back to pl data for stats
-  const mapLeague = hasInteracted ? league : "europe";
-  const meta = ALL_META[league] ?? plMeta;
-  const recent = meta.recentResults.slice(0, 6);
-
-  const baseline = meta.metrics.dummy_log_loss;
-  const model = meta.metrics.model_log_loss;
+  // Featured league for the chart — use the highest accuracy one (Bundesliga)
+  const featuredId = "bundesliga";
+  const featured = ALL_META[featuredId];
+  const accuracy = Math.round(featured.metrics.model_accuracy * 100);
+  const baseline = featured.metrics.dummy_log_loss;
+  const model = featured.metrics.model_log_loss;
   const improvement = Math.round(((baseline - model) / baseline) * 100);
-  const accuracy = Math.round(meta.metrics.model_accuracy * 100);
+  const homeWinBaseline = Math.round(
+    (featured.confusionMatrix[0][0] / featured.confusionMatrix[0].reduce((a, b) => a + b, 0)) * 100
+  );
 
   return (
     <section className="border-t border-border bg-background py-20 sm:py-24">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-6">
         <div className="mb-10 max-w-2xl">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Under the hood
-          </h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Under the hood</h2>
           <p className="mt-3 text-muted-foreground">
-            Five separate logistic regression models — one per league — each
-            trained on historical form data with strict temporal validation so
-            every prediction uses only what was known before kickoff.
+            Five separate logistic regression models — one per league — each trained with strict
+            temporal validation so every prediction uses only what was known before kickoff.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-border md:grid-cols-2">
-          {/* 1. Stadium map */}
-          <div className="border-b border-border bg-card p-6 md:border-r">
-            <QuadrantHeader
-              icon={hasInteracted ? <MapPin className="h-4 w-4" /> : <Globe className="h-4 w-4" />}
-              label={hasInteracted ? "Stadium network" : "All 5 leagues"}
-            />
-            <h3 className="mt-3 text-xl font-semibold">
-              {hasInteracted ? (
-                <>
-                  Every ground, mapped.{" "}
-                  <span className="font-normal text-muted-foreground">
-                    {meta.teamCount} clubs feed the {meta.leagueName} model.
-                  </span>
-                </>
-              ) : (
-                <>
-                  {TOTAL_CLUBS} clubs across Europe.{" "}
-                  <span className="font-normal text-muted-foreground">
-                    Select a league above to zoom in.
-                  </span>
-                </>
-              )}
-            </h3>
-            <div className="relative mt-4">
-              <TeamMap league={mapLeague} />
-              <div className="absolute right-2 top-2 rounded-md border border-border bg-background/80 px-2.5 py-1 text-xs font-medium backdrop-blur">
-                {hasInteracted
-                  ? `${meta.teamCount} clubs · ${meta.totalMatches.toLocaleString()} matches`
-                  : `${TOTAL_CLUBS} clubs · ${TOTAL_MATCHES.toLocaleString()} matches`}
-              </div>
+        {/* Top stats row */}
+        <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {[
+            { value: "5",                          label: "Leagues" },
+            { value: totalClubs.toString(),         label: "Clubs tracked" },
+            { value: totalMatches.toLocaleString(), label: "Matches analysed" },
+            { value: `${avgAccuracy}%`,             label: "Avg test accuracy" },
+          ].map((s) => (
+            <div key={s.label} className="rounded-xl border border-border bg-card p-5 text-center">
+              <div className="text-2xl font-bold tabular-nums text-primary">{s.value}</div>
+              <div className="mt-1 text-xs text-muted-foreground">{s.label}</div>
             </div>
-          </div>
+          ))}
+        </div>
 
-          {/* 2. Recent results feed */}
-          <div className="flex flex-col border-b border-border bg-card p-6">
-            <QuadrantHeader icon={<GalleryVerticalEnd className="h-4 w-4" />} label="Methodology" />
+        <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-border md:grid-cols-2">
+          {/* 1. Per-league accuracy breakdown */}
+          <div className="border-b border-border bg-card p-6 md:border-r">
+            <QuadrantHeader icon={<TrendingUp className="h-4 w-4" />} label="Per-league accuracy" />
             <h3 className="mt-3 text-xl font-semibold">
-              Trained on real results.{" "}
+              Up to 52% accuracy.{" "}
               <span className="font-normal text-muted-foreground">
-                The model learns from thousands of completed matches like these.
+                Across {totalMatches.toLocaleString()} real matches, temporally validated.
               </span>
             </h3>
-            <div className="relative mt-4 flex-1">
-              <div className="space-y-2">
-                {recent.map((m, i) => {
-                  const winner = m.ftr === "H" ? m.home : m.ftr === "A" ? m.away : null;
-                  return (
-                    <div
-                      key={i}
-                      className="animate-scale-up flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2"
-                      style={{ animationDelay: `${i * 90}ms` }}
-                    >
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(m.date).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                        })}
+            <div className="mt-4 space-y-3">
+              {LEAGUE_DISPLAY.map(({ id, name, flag }) => {
+                const m = ALL_META[id as keyof typeof ALL_META];
+                const acc = Math.round(m.metrics.model_accuracy * 100);
+                return (
+                  <div key={id}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="flex items-center gap-2 text-sm font-medium">
+                        <span>{flag}</span>
+                        {name}
                       </span>
-                      <div className="flex flex-1 items-center justify-center gap-2 text-sm">
-                        <ResultCrest name={m.home} league={league} />
-                        <span className="font-mono font-semibold">
-                          {m.fthg}-{m.ftag}
-                        </span>
-                        <ResultCrest name={m.away} league={league} />
-                      </div>
-                      <span className="w-14 text-right text-xs text-muted-foreground">
-                        {winner ? winner.split(" ")[0] : "Draw"}
-                      </span>
+                      <span className="text-sm font-semibold tabular-nums text-primary">{acc}%</span>
                     </div>
-                  );
-                })}
-              </div>
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-card to-transparent" />
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-primary"
+                        style={{ width: `${acc}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* 3. Accuracy chart */}
-          <div className="border-b border-border bg-card p-6 md:border-r md:border-b-0">
-            <QuadrantHeader icon={<Activity className="h-4 w-4" />} label="Model performance" />
+          {/* 2. Methodology */}
+          <div className="border-b border-border bg-card p-6">
+            <QuadrantHeader icon={<Layers className="h-4 w-4" />} label="23 features, 5 models" />
             <h3 className="mt-3 text-xl font-semibold">
-              {hasInteracted ? (
-                <>
-                  Accuracy through the {formatSeason(meta.testSeasons[0])} season.{" "}
-                  <span className="font-normal text-muted-foreground">
-                    Tested on a full season the model never saw in training.
+              Pure form, nothing else.{" "}
+              <span className="font-normal text-muted-foreground">
+                No injuries, no transfers, no weather — just the numbers teams put on the pitch.
+              </span>
+            </h3>
+            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+              {[
+                { label: "Points per game",         detail: "Last 5 and last 10 matches" },
+                { label: "Goals scored & conceded",  detail: "Both 5 and 10 game windows" },
+                { label: "Goal difference",          detail: "Per game, 5 and 10 game windows" },
+                { label: "Composite comparisons",    detail: "Head-to-head form gaps (5 features)" },
+                { label: "Rest / fatigue proxy",     detail: "Days since last match" },
+              ].map(({ label, detail }) => (
+                <li key={label} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>
+                    <span className="font-medium text-foreground">{label}</span>
+                    {" — "}
+                    {detail}
                   </span>
-                </>
-              ) : (
-                <>
-                  {AVG_ACCURACY}% average accuracy.{" "}
-                  <span className="font-normal text-muted-foreground">
-                    Each model tested on a held-out season it never trained on.
-                  </span>
-                </>
-              )}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 rounded-lg border border-border bg-background px-4 py-3 text-xs text-muted-foreground">
+              Features are computed independently for home and away, then compared with difference
+              features — giving the model 23 inputs per fixture.
+            </div>
+          </div>
+
+          {/* 3. Accuracy chart (Bundesliga as the highlighted league) */}
+          <div className="border-b border-border bg-card p-6 md:border-r md:border-b-0">
+            <QuadrantHeader icon={<Activity className="h-4 w-4" />} label="Bundesliga — model performance" />
+            <h3 className="mt-3 text-xl font-semibold">
+              Accuracy through the {formatSeason(featured.testSeasons[0])} season.{" "}
+              <span className="font-normal text-muted-foreground">
+                Tested on matches the model had never seen before.
+              </span>
             </h3>
             <div className="mt-4">
-              <AccuracyChart data={meta.monthlyAccuracy} />
+              <AccuracyChart data={featured.monthlyAccuracy} />
             </div>
           </div>
 
@@ -200,8 +167,8 @@ export function FeaturedSection() {
               <p className="mt-1 text-base font-semibold leading-snug">
                 {accuracy}% test accuracy.{" "}
                 <span className="font-normal text-muted-foreground">
-                  {improvement}% lower log-loss than a naive majority-class
-                  baseline, across {meta.totalMatches.toLocaleString()} {meta.leagueName} matches.
+                  {improvement}% lower log-loss than a majority-class baseline, across{" "}
+                  {featured.totalMatches.toLocaleString()} Bundesliga matches.
                 </span>
               </p>
               <div className="mt-auto grid grid-cols-2 gap-2 pt-2">
@@ -210,39 +177,33 @@ export function FeaturedSection() {
                   <div className="text-[10px] text-muted-foreground">ML model</div>
                 </div>
                 <div className="rounded-lg border border-border bg-background px-3 py-2 text-center">
-                  <div className="text-lg font-bold tabular-nums">
-                    {Math.round(
-                      (meta.confusionMatrix[0][0] /
-                        meta.confusionMatrix[0].reduce((a, b) => a + b, 0)) *
-                        100
-                    )}%
-                  </div>
+                  <div className="text-lg font-bold tabular-nums">{homeWinBaseline}%</div>
                   <div className="text-[10px] text-muted-foreground">Home-win baseline</div>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-3 p-6">
-              <QuadrantHeader icon={<Layers className="h-4 w-4" />} label="12 inputs" />
+              <QuadrantHeader icon={<Activity className="h-4 w-4" />} label="Temporal validation" />
               <p className="mt-1 text-base font-semibold leading-snug">
-                6 form stats, doubled.{" "}
+                No data leakage.{" "}
                 <span className="font-normal text-muted-foreground">
-                  Each feature is computed independently for home and away,
-                  giving the model a full picture of both sides.
+                  Each feature snapshot uses only matches played before the fixture date.
+                  The test season was never in the training set.
                 </span>
               </p>
               <ul className="mt-auto space-y-1 pt-2 text-xs text-muted-foreground">
                 <li className="flex items-center gap-2">
                   <span className="h-1 w-1 rounded-full bg-primary" />
-                  Points per game (last 5 and 10 matches)
+                  Train: all seasons before the test season
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="h-1 w-1 rounded-full bg-primary" />
-                  Goals scored and conceded per game
+                  Test: the most recent completed full season
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="h-1 w-1 rounded-full bg-primary" />
-                  Days since last match (fatigue proxy)
+                  Snapshots computed match-by-match in chronological order
                 </li>
               </ul>
             </div>

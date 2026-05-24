@@ -17,24 +17,24 @@
   "metrics": {
     "dummy_log_loss": 1.0858,
     "form_log_loss": 1.1041,
-    "model_log_loss": 1.0534,
-    "model_accuracy": 0.4556
+    "model_log_loss": 1.041,
+    "model_accuracy": 0.4694
   },
   "confusionMatrix": [
     [
-      83,
-      28,
-      42
+      115,
+      0,
+      38
     ],
     [
-      43,
-      19,
+      62,
+      0,
       36
     ],
     [
-      29,
-      18,
-      62
+      55,
+      0,
+      54
     ]
   ],
   "monthlyAccuracy": [
@@ -45,17 +45,17 @@
     },
     {
       "month": "2025-09",
-      "accuracy": 0.519,
+      "accuracy": 0.444,
       "matches": 27
     },
     {
       "month": "2025-10",
-      "accuracy": 0.519,
+      "accuracy": 0.667,
       "matches": 27
     },
     {
       "month": "2025-11",
-      "accuracy": 0.462,
+      "accuracy": 0.564,
       "matches": 39
     },
     {
@@ -65,7 +65,7 @@
     },
     {
       "month": "2026-01",
-      "accuracy": 0.306,
+      "accuracy": 0.286,
       "matches": 49
     },
     {

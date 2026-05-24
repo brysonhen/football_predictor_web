@@ -35,15 +35,27 @@ def _load_league(league: str) -> tuple[dict, dict, pd.DataFrame]:
     return model, snapshots, matches
 
 
+def _g(snap: dict, key: str, default: float = 0.0) -> float:
+    return float(snap.get(key, default))
+
+
 def _feature_vector(home: dict, away: dict) -> np.ndarray:
+    h, a = home, away
     return np.array([
-        home["ppg_l5"], away["ppg_l5"],
-        home["ppg_l10"], away["ppg_l10"],
-        home["gf_l5"], home["ga_l5"],
-        away["gf_l5"], away["ga_l5"],
-        home["rest_days"], away["rest_days"],
-        home["ppg_l5"] - away["ppg_l5"],
-        home["gf_l5"] - away["gf_l5"],
+        _g(h, "ppg_l5"),   _g(a, "ppg_l5"),
+        _g(h, "ppg_l10"),  _g(a, "ppg_l10"),
+        _g(h, "gf_l5"),    _g(h, "ga_l5"),
+        _g(a, "gf_l5"),    _g(a, "ga_l5"),
+        _g(h, "gf_l10"),   _g(h, "ga_l10"),
+        _g(a, "gf_l10"),   _g(a, "ga_l10"),
+        _g(h, "gd_l5"),    _g(a, "gd_l5"),
+        _g(h, "gd_l10"),   _g(a, "gd_l10"),
+        _g(h, "rest_days"), _g(a, "rest_days"),
+        _g(h, "ppg_l5")  - _g(a, "ppg_l5"),
+        _g(h, "ppg_l10") - _g(a, "ppg_l10"),
+        _g(h, "gf_l5")   - _g(a, "gf_l5"),
+        _g(h, "gd_l5")   - _g(a, "gd_l5"),
+        _g(h, "ga_l5")   - _g(a, "gf_l5"),
     ], dtype=float)
 
 
@@ -109,6 +121,50 @@ def _explain(feature: str, impact: float, home_name: str, away_name: str,
             f"Attacking output: {home_name} scoring {v(h,'gf_l5')} vs {away_name} scoring {v(a,'gf_l5')} goals per game. "
             + ("The home side has the sharper attack."
                if supports else "The away side's attack has been more potent recently."),
+        "home_gf_l10":
+            f"{home_name} have scored {v(h,'gf_l10')} goals per game over their last 10. "
+            + ("Sustained attacking output over a longer stretch is a strong indicator."
+               if supports else "The attacking form over 10 games tells a worrying story."),
+        "home_ga_l10":
+            f"{home_name} have conceded {v(h,'ga_l10')} goals per game over their last 10. "
+            + ("Defensively solid across a long run — hard to break down."
+               if supports else "A leaky defense over 10 games is hard to hide."),
+        "away_gf_l10":
+            f"{away_name} have scored {v(a,'gf_l10')} goals per game over their last 10 away matches. "
+            + ("Their attack hasn't been firing over the long run."
+               if supports else "That's a genuinely dangerous attacking record on the road."),
+        "away_ga_l10":
+            f"{away_name} have conceded {v(a,'ga_l10')} goals per game over their last 10. "
+            + (f"They're conceding freely — {home_name} should find spaces."
+               if supports else "Defensively solid over 10 games — tough to break down."),
+        "home_gd_l5":
+            f"{home_name} have a goal difference of {v(h,'gd_l5')} per game over their last 5. "
+            + ("Positive goal difference over recent games is a reliable marker of form."
+               if supports else "A negative goal difference in recent games flags real problems."),
+        "away_gd_l5":
+            f"{away_name} have a goal difference of {v(a,'gd_l5')} per game over their last 5. "
+            + ("Their goal difference away from home is underwhelming."
+               if supports else "Positive goal difference on the road — they're in good shape."),
+        "home_gd_l10":
+            f"{home_name}'s goal difference across their last 10 is {v(h,'gd_l10')} per game. "
+            + ("Consistent goal difference over a longer window backs up the prediction."
+               if supports else "That goal difference tells a concerning story over the longer run."),
+        "away_gd_l10":
+            f"{away_name}'s goal difference across their last 10 is {v(a,'gd_l10')} per game. "
+            + ("Away goal difference has been poor — the home side should benefit."
+               if supports else "Strong goal difference over 10 games on the road is impressive."),
+        "ppg_diff_l10":
+            f"Longer-term form: {home_name} at {v(h,'ppg_l10')} vs {away_name} at {v(a,'ppg_l10')} pts/game over 10. "
+            + ("The form advantage clearly belongs to the home side."
+               if supports else "The visitors have been more consistent over the last 10 games."),
+        "gd_diff_l5":
+            f"Goal difference gap over 5 games: {home_name} at {v(h,'gd_l5')} vs {away_name} at {v(a,'gd_l5')} per game. "
+            + ("Home side is clearly outperforming on goal difference."
+               if supports else "Visitors hold the better goal difference over this window."),
+        "ga_diff_l5":
+            f"{home_name} concede {v(h,'ga_l5')} vs {away_name} score {v(a,'gf_l5')} per game. "
+            + ("The home defense appears capable of containing this away attack."
+               if supports else "The away attack is outpacing the home defense — could be exposed."),
     }
     return lines.get(feature, feature)
 
