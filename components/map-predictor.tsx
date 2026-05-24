@@ -15,6 +15,13 @@ import { AccuracyChart } from "@/components/accuracy-chart";
 import { teamLogoSrc, formatSeason, type PredictionResult, type TeamForm, type TeamMeta } from "@/lib/types";
 import { useLeague } from "@/lib/league-context";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import plTeams         from "@/data/pl/teams.json";
 import laligaTeams     from "@/data/laliga/teams.json";
@@ -162,97 +169,114 @@ function ProbabilityBar({ home, draw, away }: { home: number; draw: number; away
   );
 }
 
-function SelectionBar() {
-  const { viewMode, homeTeam, awayTeam, league, swapTeams, reset, selectTeam } = useLeague();
-  const leagueName = LEAGUES.find((l) => l.id === league)?.name ?? "";
+function TeamPicker() {
+  const { viewMode, homeTeam, awayTeam, league, swapTeams, setHomeTeam, setAwayTeam } = useLeague();
   const teams = ALL_TEAMS[league] ?? {};
-  const homeMeta = homeTeam ? teams[homeTeam] : undefined;
-  const awayMeta = awayTeam ? teams[awayTeam] : undefined;
+  const sorted = Object.values(teams).sort((a, b) => a.name.localeCompare(b.name));
 
   if (viewMode === "europe") {
     return (
-      <div className="flex items-center justify-center gap-3 py-4 text-sm text-muted-foreground">
+      <div className="flex items-center justify-center gap-2 py-5 text-sm text-muted-foreground">
         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-        Click a league below to zoom in, then pick two teams on the map
+        Select a league above, then pick teams from the map or the dropdowns below
       </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-3 py-4">
-      {/* Home slot */}
-      <div
-        className={`flex min-w-[120px] items-center gap-2.5 rounded-xl border px-4 py-2.5 ${
-          homeTeam
-            ? "border-emerald-500/40 bg-emerald-500/10"
-            : "border-dashed border-border bg-card/60"
-        }`}
-      >
-        {homeTeam ? (
-          <>
-            <TeamLogo team={homeMeta} size={24} />
-            <div className="min-w-0">
-              <div className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">HOME</div>
-              <div className="truncate text-sm font-semibold">{homeTeam}</div>
-            </div>
-            <button
-              onClick={() => selectTeam(homeTeam)}
-              className="ml-auto text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </>
-        ) : (
-          <span className="text-sm text-muted-foreground">
-            {awayTeam ? "Click to set Home" : "Pick home team"}
-          </span>
-        )}
-      </div>
+    <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-[1fr_auto_1fr]">
+        {/* Home dropdown */}
+        <div>
+          <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+            Home team
+          </label>
+          <Select
+            value={homeTeam ?? ""}
+            onValueChange={(v) => setHomeTeam(v || null)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select home team…">
+                {homeTeam && (
+                  <span className="flex items-center gap-2">
+                    <TeamLogo team={teams[homeTeam]} size={18} />
+                    {homeTeam}
+                  </span>
+                )}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {sorted.map((t) => (
+                <SelectItem key={t.name} value={t.name} disabled={t.name === awayTeam}>
+                  <span className="flex items-center gap-2">
+                    <TeamLogo team={t} size={18} />
+                    {t.name}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Swap */}
-      {homeTeam && awayTeam && (
+        {/* Swap */}
         <button
           onClick={swapTeams}
-          className="rounded-full border border-border bg-card p-2 text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
-          title="Swap home / away"
+          disabled={!homeTeam || !awayTeam}
+          className="mb-0.5 hidden sm:flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
+          aria-label="Swap home and away"
         >
           <ArrowLeftRight className="h-4 w-4" />
         </button>
-      )}
 
-      {/* vs divider when only one team */}
-      {(!homeTeam || !awayTeam) && !(homeTeam && awayTeam) && (
-        <span className="text-xs text-muted-foreground">vs</span>
-      )}
-
-      {/* Away slot */}
-      <div
-        className={`flex min-w-[120px] items-center gap-2.5 rounded-xl border px-4 py-2.5 ${
-          awayTeam
-            ? "border-orange-500/40 bg-orange-500/10"
-            : "border-dashed border-border bg-card/60"
-        }`}
-      >
-        {awayTeam ? (
-          <>
-            <TeamLogo team={awayMeta} size={24} />
-            <div className="min-w-0">
-              <div className="text-[10px] font-medium text-orange-600 dark:text-orange-400">AWAY</div>
-              <div className="truncate text-sm font-semibold">{awayTeam}</div>
-            </div>
-            <button
-              onClick={() => selectTeam(awayTeam)}
-              className="ml-auto text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </>
-        ) : (
-          <span className="text-sm text-muted-foreground">
-            {homeTeam ? "Now pick away team" : "Pick away team"}
-          </span>
-        )}
+        {/* Away dropdown */}
+        <div>
+          <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+            Away team
+          </label>
+          <Select
+            value={awayTeam ?? ""}
+            onValueChange={(v) => setAwayTeam(v || null)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select away team…">
+                {awayTeam && (
+                  <span className="flex items-center gap-2">
+                    <TeamLogo team={teams[awayTeam]} size={18} />
+                    {awayTeam}
+                  </span>
+                )}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {sorted.map((t) => (
+                <SelectItem key={t.name} value={t.name} disabled={t.name === homeTeam}>
+                  <span className="flex items-center gap-2">
+                    <TeamLogo team={t} size={18} />
+                    {t.name}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+
+      {/* Mobile swap */}
+      <button
+        onClick={swapTeams}
+        disabled={!homeTeam || !awayTeam}
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background py-2 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed sm:hidden"
+      >
+        <ArrowLeftRight className="h-4 w-4" />
+        Swap home / away
+      </button>
+
+      {/* Hint when league is chosen but no teams yet */}
+      {!homeTeam && !awayTeam && (
+        <p className="mt-3 text-center text-xs text-muted-foreground">
+          Or click any team pin on the map above
+        </p>
+      )}
     </div>
   );
 }
@@ -321,8 +345,8 @@ export function MapPredictor() {
           Football <span className="text-primary">Match Predictor</span>
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground">
-          Select a league, then click two clubs on the map to get an instant
-          ML-powered win probability prediction.
+          Select a league, pick two clubs from the map or the dropdowns, and get
+          an instant ML-powered win probability prediction.
         </p>
       </div>
 
@@ -359,9 +383,9 @@ export function MapPredictor() {
         </div>
       </div>
 
-      {/* Team selection bar */}
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <SelectionBar />
+      {/* Team picker (dropdowns) */}
+      <div className="mx-auto max-w-5xl px-4 pt-4 sm:px-6">
+        <TeamPicker />
       </div>
 
       {/* Loading spinner */}

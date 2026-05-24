@@ -7,32 +7,21 @@ import { FeaturedSection } from "@/components/featured-section";
 import { useLeague } from "@/lib/league-context";
 
 function NavBar({ githubUrl }: { githubUrl: string }) {
-  const { viewMode, reset } = useLeague();
-  const canReset = viewMode !== "europe";
+  const { reset } = useLeague();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
         <div className="flex items-center gap-3">
           <button
-            onClick={canReset ? reset : undefined}
-            className={`flex items-center gap-2.5 font-semibold transition-colors ${
-              canReset ? "hover:text-primary cursor-pointer" : "cursor-default"
-            }`}
-            title={canReset ? "Back to Europe overview" : undefined}
+            onClick={reset}
+            className="flex items-center gap-2.5 font-semibold transition-colors hover:text-primary"
+            title="Back to Europe overview"
           >
+            <Home className="h-4 w-4 text-primary" />
             <Target className="h-5 w-5 text-primary" />
             <span>Matchup Predictor</span>
           </button>
-          {canReset && (
-            <button
-              onClick={reset}
-              className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
-            >
-              <Home className="h-3 w-3" />
-              All leagues
-            </button>
-          )}
         </div>
         <a
           href={githubUrl}

@@ -10,7 +10,11 @@ interface LeagueContextValue {
   homeTeam: string | null;
   awayTeam: string | null;
   selectLeague: (id: string) => void;
+  /** Toggle-style: first click = home, second = away, clicking selected = deselect */
   selectTeam: (name: string) => void;
+  /** Direct setters for dropdowns */
+  setHomeTeam: (name: string | null) => void;
+  setAwayTeam: (name: string | null) => void;
   swapTeams: () => void;
   reset: () => void;
 }
@@ -22,6 +26,8 @@ export const LeagueContext = createContext<LeagueContextValue>({
   awayTeam: null,
   selectLeague: () => {},
   selectTeam: () => {},
+  setHomeTeam: () => {},
+  setAwayTeam: () => {},
   swapTeams: () => {},
   reset: () => {},
 });
@@ -63,6 +69,14 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
     setSel({ home: null, away: null });
   }, []);
 
+  const setHomeTeam = useCallback((name: string | null) => {
+    setSel((prev) => ({ ...prev, home: name }));
+  }, []);
+
+  const setAwayTeam = useCallback((name: string | null) => {
+    setSel((prev) => ({ ...prev, away: name }));
+  }, []);
+
   return (
     <LeagueContext.Provider
       value={{
@@ -72,6 +86,8 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
         awayTeam: sel.away,
         selectLeague,
         selectTeam,
+        setHomeTeam,
+        setAwayTeam,
         swapTeams,
         reset,
       }}
