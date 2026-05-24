@@ -321,12 +321,12 @@ export function MapPredictor() {
     return () => { cancelled = true; };
   }, [homeTeam, awayTeam, league]);
 
-  function handleTeamClick(name: string, leagueId?: string) {
-    // If on Europe view and a team is clicked, zoom to that league first
-    if (viewMode === "europe" && leagueId) {
-      selectLeague(leagueId);
-    }
+  function handleTeamClick(name: string) {
     selectTeam(name);
+  }
+
+  function handleLeagueClick(id: string) {
+    selectLeague(id);
   }
 
   const meta = ALL_META[league] ?? plMeta;
@@ -370,34 +370,35 @@ export function MapPredictor() {
         </div>
       </div>
 
-      {/* THE MAP */}
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+      {/* THE MAP — full width, no max-width cap */}
+      <div className="px-4 sm:px-6">
         <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <TeamMap
             league={mapLeague}
             homeTeam={homeTeam}
             awayTeam={awayTeam}
             onTeamClick={handleTeamClick}
+            onLeagueClick={handleLeagueClick}
             interactive={true}
           />
         </div>
       </div>
 
       {/* Team picker (dropdowns) */}
-      <div className="mx-auto max-w-5xl px-4 pt-4 sm:px-6">
+      <div className="px-4 pt-4 sm:px-6">
         <TeamPicker />
       </div>
 
       {/* Loading spinner */}
       {loading && (
-        <div className="mx-auto mt-2 flex max-w-5xl items-center justify-center gap-2 px-6 py-4 text-sm text-muted-foreground">
+        <div className="mx-auto mt-2 flex max-w-7xl items-center justify-center gap-2 px-6 py-4 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
           Running prediction…
         </div>
       )}
 
       {error && (
-        <div className="mx-auto max-w-5xl px-6 py-2">
+        <div className="mx-auto max-w-7xl px-6 py-2">
           <p className="text-center text-sm text-destructive">{error}</p>
         </div>
       )}
@@ -407,7 +408,7 @@ export function MapPredictor() {
         <div
           ref={resultRef}
           key={`${league}-${result.home}-${result.away}`}
-          className="mx-auto max-w-5xl animate-fade-up space-y-4 px-4 pb-10 sm:px-6"
+          className="mx-auto max-w-7xl animate-fade-up space-y-4 px-4 pb-10 sm:px-6"
         >
           {/* Probability bar */}
           <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">

@@ -11,15 +11,14 @@ import bundesligaTeams from "@/data/bundesliga/teams.json";
 import serieaTeams from "@/data/seriea/teams.json";
 import ligue1Teams from "@/data/ligue1/teams.json";
 
-// Geographic bounds — tuned to actual team locations.
-// Widened longitude ranges so PL/Bundesliga appear squarer (more sea is fine).
+// La Liga uses mainland-Spain bounds — Canary Islands (Las Palmas at 28°N) are excluded.
 const REGIONS: Record<string, { lat: { min: number; max: number }; lng: { min: number; max: number } }> = {
-  pl:         { lat: { min: 50.3,  max: 55.3  }, lng: { min: -5.8,  max:  3.8  } },
-  laliga:     { lat: { min: 27.6,  max: 44.0  }, lng: { min: -9.8,  max:  4.2  } },
-  bundesliga: { lat: { min: 47.5,  max: 54.8  }, lng: { min:  4.8,  max: 15.2  } },
-  seriea:     { lat: { min: 38.5,  max: 46.6  }, lng: { min:  6.5,  max: 18.8  } },
-  ligue1:     { lat: { min: 41.4,  max: 51.2  }, lng: { min: -5.5,  max:  9.5  } },
-  europe:     { lat: { min: 35.5,  max: 56.0  }, lng: { min: -10.5, max: 19.5  } },
+  pl:         { lat: { min: 50.3, max: 55.3 }, lng: { min: -5.8, max:  3.8 } },
+  laliga:     { lat: { min: 36.0, max: 43.9 }, lng: { min: -9.1, max:  3.2 } },
+  bundesliga: { lat: { min: 47.5, max: 54.8 }, lng: { min:  4.8, max: 15.2 } },
+  seriea:     { lat: { min: 38.5, max: 46.6 }, lng: { min:  6.5, max: 18.8 } },
+  ligue1:     { lat: { min: 41.4, max: 51.2 }, lng: { min: -5.5, max:  9.5 } },
+  europe:     { lat: { min: 36.5, max: 56.0 }, lng: { min: -9.5, max: 19.5 } },
 };
 
 const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
@@ -30,41 +29,34 @@ const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
   ligue1:     ligue1Teams     as Record<string, TeamMeta>,
 };
 
-const LEAGUE_COLORS: Record<string, string> = {
-  pl:         "#7c3aed",
-  laliga:     "#ea580c",
-  bundesliga: "#dc2626",
-  seriea:     "#2563eb",
-  ligue1:     "#0f172a",
-};
+// League cards shown on the Europe overview map instead of individual pins.
+// Clicking a card zooms into that league.
+const LEAGUE_CARDS = [
+  { id: "pl",         flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", name: "Premier League",  lat: 52.5,  lng: -1.5  },
+  { id: "laliga",     flag: "🇪🇸", name: "La Liga",          lat: 40.4,  lng: -3.7  },
+  { id: "bundesliga", flag: "🇩🇪", name: "Bundesliga",       lat: 51.2,  lng: 10.2  },
+  { id: "seriea",     flag: "🇮🇹", name: "Serie A",          lat: 41.9,  lng: 12.5  },
+  { id: "ligue1",     flag: "🇫🇷", name: "Ligue 1",          lat: 46.6,  lng:  2.3  },
+];
 
-// Pre-compute one DottedMap per region.
-const MAPS: Record<string, DottedMap> = Object.fromEntries(
-  Object.entries(REGIONS).map(([id, region]) => [
-    id,
-    new DottedMap({ height: 90, grid: "diagonal", region }),
-  ])
-);
+type Point = { x: number; y: number };
+type Pin   = { team: TeamMeta; x: number; y: number };
 
-type Pin = { team: TeamMeta; x: number; y: number; league?: string };
+// ─── Lazy map cache ──────────────────────────────────────────────────────────
+// Nothing is computed at module load. Each league's DottedMap is built once,
+// the first time it is needed, then stored here.
+const _mapCache:  Record<string, DottedMap> = {};
+const _pinsCache: Record<string, { pins: Pin[]; bgPoints: Point[] }> = {};
 
-function buildPins(league: string): { pins: Pin[]; bgPoints: { x: number; y: number }[] } {
-  const map = MAPS[league];
+function getLeagueData(league: string): { pins: Pin[]; bgPoints: Point[] } {
+  if (_pinsCache[league]) return _pinsCache[league];
+
+  // height: 65 → ~30 % fewer SVG dots than the old height: 90
+  const map = new DottedMap({ height: 65, grid: "diagonal", region: REGIONS[league] });
+  _mapCache[league] = map;
+
   const bgPoints = map.getPoints();
-
-  if (league === "europe") {
-    const pins: Pin[] = [];
-    for (const lid of ["pl", "laliga", "bundesliga", "seriea", "ligue1"]) {
-      for (const team of Object.values(ALL_TEAMS[lid])) {
-        if (team.lat == null || team.lng == null) continue;
-        const pin = map.getPin({ lat: team.lat, lng: team.lng });
-        if (pin) pins.push({ team, x: pin.x, y: pin.y, league: lid });
-      }
-    }
-    return { pins, bgPoints };
-  }
-
-  const teams = Object.values(ALL_TEAMS[league]);
+  const teams = Object.values(ALL_TEAMS[league] ?? {});
   const pins: Pin[] = teams
     .map((team) => {
       if (team.lat == null || team.lng == null) return null;
@@ -72,26 +64,29 @@ function buildPins(league: string): { pins: Pin[]; bgPoints: { x: number; y: num
       return pin ? { team, x: pin.x, y: pin.y } : null;
     })
     .filter((p): p is Pin => p !== null);
-  return { pins, bgPoints };
+
+  _pinsCache[league] = { pins, bgPoints };
+  return _pinsCache[league];
 }
 
-const LEAGUE_PINS: Record<string, ReturnType<typeof buildPins>> = Object.fromEntries(
-  Object.keys(REGIONS).map((id) => [id, buildPins(id)])
-);
+// Europe background dots only — no team pins at this level.
+let _europePoints: Point[] | null = null;
+function getEuropePoints(): Point[] {
+  if (!_europePoints) {
+    const map = new DottedMap({ height: 65, grid: "diagonal", region: REGIONS.europe });
+    _europePoints = map.getPoints();
+  }
+  return _europePoints;
+}
 
-/** Normalise an SVG coordinate space to a target aspect ratio by padding. */
-function computeViewBox(
-  bgPoints: { x: number; y: number }[],
-  pins: Pin[],
-  targetRatio = 4 / 3,
-) {
-  const allX = [...bgPoints.map((p) => p.x), ...pins.map((p) => p.x)];
-  const allY = [...bgPoints.map((p) => p.y), ...pins.map((p) => p.y)];
+// ─── ViewBox ─────────────────────────────────────────────────────────────────
+function computeViewBox(points: Point[], extraPts: Point[], targetRatio: number) {
+  const all = [...points, ...extraPts];
   const PAD = 1.5;
-  let minX = Math.min(...allX) - PAD;
-  let minY = Math.min(...allY) - PAD;
-  let VW = Math.max(...allX) + PAD - minX;
-  let VH = Math.max(...allY) + PAD - minY;
+  let minX = Math.min(...all.map((p) => p.x)) - PAD;
+  let minY = Math.min(...all.map((p) => p.y)) - PAD;
+  let VW   = Math.max(...all.map((p) => p.x)) + PAD - minX;
+  let VH   = Math.max(...all.map((p) => p.y)) + PAD - minY;
 
   const ratio = VW / VH;
   if (ratio < targetRatio) {
@@ -106,11 +101,13 @@ function computeViewBox(
   return { minX, minY, VW, VH };
 }
 
+// ─── Component ───────────────────────────────────────────────────────────────
 interface TeamMapProps {
   league?: string;
   homeTeam?: string | null;
   awayTeam?: string | null;
   onTeamClick?: (teamName: string, leagueId?: string) => void;
+  onLeagueClick?: (leagueId: string) => void;
   interactive?: boolean;
 }
 
@@ -119,168 +116,188 @@ export function TeamMap({
   homeTeam = null,
   awayTeam = null,
   onTeamClick,
+  onLeagueClick,
   interactive = false,
 }: TeamMapProps) {
-  const [hovered, setHovered] = useState<Pin | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null); // team name
+  const isEurope = league === "europe";
 
-  const key = LEAGUE_PINS[league] ? league : "europe";
-  const { pins, bgPoints } = LEAGUE_PINS[key];
-  const isEurope = key === "europe";
-  // Europe overview: 5:4 ratio (a bit wider); league views: 4:3
+  // ── Lazy-compute only the active view ──────────────────────────────────────
+  const { pins, bgPoints } = useMemo(() => {
+    if (isEurope) return { pins: [], bgPoints: getEuropePoints() };
+    return getLeagueData(league);
+  }, [league, isEurope]);
+
+  // ── League card positions on the Europe map ────────────────────────────────
+  const leagueCardPositions = useMemo(() => {
+    if (!isEurope) return [];
+    const map = _mapCache.europe ?? (() => {
+      const m = new DottedMap({ height: 65, grid: "diagonal", region: REGIONS.europe });
+      _mapCache.europe = m;
+      return m;
+    })();
+    return LEAGUE_CARDS.map((card) => {
+      const pin = map.getPin({ lat: card.lat, lng: card.lng });
+      return pin ? { ...card, x: pin.x, y: pin.y } : null;
+    }).filter(Boolean) as (typeof LEAGUE_CARDS[0] & { x: number; y: number })[];
+  }, [isEurope]);
+
   const targetRatio = isEurope ? 5 / 4 : 4 / 3;
 
   const { minX, minY, VW, VH } = useMemo(
     () => computeViewBox(bgPoints, pins, targetRatio),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [key]
+    [league]
   );
 
-  function toPercent(pin: Pick<Pin, "x" | "y">) {
-    return {
-      left: ((pin.x - minX) / VW) * 100,
-      top:  ((pin.y - minY) / VH) * 100,
-    };
+  function toPercent(x: number, y: number) {
+    return { left: ((x - minX) / VW) * 100, top: ((y - minY) / VH) * 100 };
   }
 
-  function pinRole(name: string) {
-    if (name === homeTeam) return "home";
-    if (name === awayTeam) return "away";
-    return null;
-  }
-
-  const pinSize = isEurope ? 10 : 15;
+  // 22 px logos — large enough to actually see and click
+  const PIN_SIZE = 22;
 
   return (
     <div className="relative w-full select-none">
-      <svg
-        viewBox={`${minX} ${minY} ${VW} ${VH}`}
-        className="w-full h-auto"
-        aria-hidden="true"
-      >
+      {/* Dot background */}
+      <svg viewBox={`${minX} ${minY} ${VW} ${VH}`} className="w-full h-auto" aria-hidden="true">
         {bgPoints.map((pt, i) => (
-          <circle
-            key={i}
-            cx={pt.x}
-            cy={pt.y}
-            r={0.24}
-            className="fill-muted-foreground/20"
-          />
+          <circle key={i} cx={pt.x} cy={pt.y} r={0.28} className="fill-muted-foreground/20" />
         ))}
       </svg>
 
-      {pins.map((pin, idx) => {
-        const pos = toPercent(pin);
-        const role = pinRole(pin.team.name);
-        const isHovered = hovered?.team.name === pin.team.name;
-        const isSelected = role !== null;
+      {/* ── Europe view: 5 large league cards ──────────────────────────────── */}
+      {isEurope && leagueCardPositions.map((card) => {
+        const pos = toPercent(card.x, card.y);
+        const teamCount = Object.keys(ALL_TEAMS[card.id] ?? {}).length;
+        return (
+          <button
+            key={card.id}
+            className="absolute -translate-x-1/2 -translate-y-1/2 group"
+            style={{ left: `${pos.left}%`, top: `${pos.top}%`, zIndex: 20 }}
+            onClick={() => onLeagueClick?.(card.id)}
+          >
+            <div className="flex flex-col items-center gap-1 rounded-xl border border-border/60 bg-card/95 px-3 py-2 shadow-md backdrop-blur transition-all duration-150 group-hover:border-primary/60 group-hover:shadow-lg group-hover:scale-105">
+              <span className="text-xl leading-none">{card.flag}</span>
+              <span className="text-[11px] font-semibold text-foreground leading-tight whitespace-nowrap">{card.name}</span>
+              <span className="text-[9px] text-muted-foreground">{teamCount} clubs</span>
+            </div>
+          </button>
+        );
+      })}
+
+      {/* ── League view: individual team pins ──────────────────────────────── */}
+      {!isEurope && pins.map((pin) => {
+        const pos = toPercent(pin.x, pin.y);
+        const isHome = pin.team.name === homeTeam;
+        const isAway = pin.team.name === awayTeam;
+        const isSelected = isHome || isAway;
+        const isHov = hovered === pin.team.name;
+        const anySelected = !!(homeTeam || awayTeam);
+        const dimmed = anySelected && !isSelected && !isHov;
         const src = teamLogoSrc(pin.team);
-        const accentColor = pin.league ? LEAGUE_COLORS[pin.league] : undefined;
-        const otherSelected = (homeTeam || awayTeam) && !isSelected && interactive;
 
         return (
           <div
-            key={`${pin.team.name}-${idx}`}
-            className={`absolute -translate-x-1/2 -translate-y-1/2 ${
-              interactive ? "cursor-pointer" : "cursor-default"
-            }`}
+            key={pin.team.name}
+            className={`absolute -translate-x-1/2 -translate-y-1/2 ${interactive ? "cursor-pointer" : "cursor-default"}`}
             style={{
               left: `${pos.left}%`,
-              top: `${pos.top}%`,
-              zIndex: isSelected ? 30 : isHovered ? 20 : 10,
-              opacity: otherSelected ? 0.55 : 1,
-              transition: "opacity 0.15s",
+              top:  `${pos.top}%`,
+              zIndex: isSelected ? 30 : isHov ? 20 : 10,
+              opacity: dimmed ? 0.45 : 1,
+              transition: "opacity 0.15s, transform 0.1s",
             }}
-            onMouseEnter={() => setHovered(pin)}
+            onMouseEnter={() => setHovered(pin.team.name)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() => {
-              if (!interactive) return;
-              onTeamClick?.(pin.team.name, pin.league);
-            }}
+            onClick={() => interactive && onTeamClick?.(pin.team.name)}
           >
-            <div
-              className={`flex items-center justify-center rounded-full transition-all duration-150 ${
-                role === "home"
-                  ? "scale-[1.9] ring-2 ring-emerald-500 ring-offset-1 ring-offset-background bg-card shadow-lg p-[2px]"
-                  : role === "away"
-                  ? "scale-[1.9] ring-2 ring-orange-500 ring-offset-1 ring-offset-background bg-card shadow-lg p-[2px]"
-                  : isHovered
-                  ? "scale-[1.5] bg-card shadow-md p-[2px]"
-                  : "bg-card/85 p-[2px] shadow-sm"
-              }`}
-              style={
-                isEurope && accentColor && !isSelected && !isHovered
-                  ? { borderBottom: `2px solid ${accentColor}` }
-                  : undefined
-              }
-            >
-              {src ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={src}
-                  alt={pin.team.name}
-                  width={pinSize}
-                  height={pinSize}
-                  style={{ width: pinSize, height: pinSize }}
-                  className="object-contain"
-                  loading="lazy"
-                />
-              ) : (
-                <span
-                  className="flex items-center justify-center rounded-full bg-primary/15 text-[6px] font-bold text-primary"
-                  style={{ width: pinSize, height: pinSize }}
-                >
-                  {pin.team.name.slice(0, 2).toUpperCase()}
-                </span>
-              )}
+            {/* Hit-area wrapper — larger than the visible circle for easier clicking */}
+            <div className="flex items-center justify-center" style={{ width: PIN_SIZE + 14, height: PIN_SIZE + 14 }}>
+              <div
+                className={`flex items-center justify-center rounded-full transition-all duration-150 ${
+                  isHome
+                    ? "ring-[3px] ring-emerald-500 ring-offset-2 ring-offset-background bg-card shadow-lg"
+                    : isAway
+                    ? "ring-[3px] ring-orange-500 ring-offset-2 ring-offset-background bg-card shadow-lg"
+                    : isHov
+                    ? "ring-2 ring-primary/50 ring-offset-1 ring-offset-background bg-card shadow-md scale-110"
+                    : "bg-card/90 shadow-sm hover:shadow-md"
+                }`}
+                style={{
+                  width:   PIN_SIZE + 8,
+                  height:  PIN_SIZE + 8,
+                  padding: 3,
+                  transform: isSelected ? "scale(1.25)" : undefined,
+                }}
+              >
+                {src ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={src}
+                    alt={pin.team.name}
+                    width={PIN_SIZE}
+                    height={PIN_SIZE}
+                    style={{ width: PIN_SIZE, height: PIN_SIZE }}
+                    className="object-contain"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span
+                    className="flex items-center justify-center rounded-full bg-primary/15 text-[8px] font-bold text-primary"
+                    style={{ width: PIN_SIZE, height: PIN_SIZE }}
+                  >
+                    {pin.team.name.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+              </div>
             </div>
 
-            {/* Role badge */}
-            {role && (
+            {/* HOME / AWAY label under selected pins */}
+            {isSelected && (
               <div
-                className={`absolute -bottom-3.5 left-1/2 -translate-x-1/2 rounded-sm px-1 text-[7px] font-bold leading-tight text-white whitespace-nowrap ${
-                  role === "home" ? "bg-emerald-500" : "bg-orange-500"
+                className={`absolute top-full left-1/2 mt-0.5 -translate-x-1/2 rounded px-1.5 py-px text-[8px] font-bold text-white whitespace-nowrap ${
+                  isHome ? "bg-emerald-500" : "bg-orange-500"
                 }`}
               >
-                {role.toUpperCase()}
+                {isHome ? "HOME" : "AWAY"}
               </div>
             )}
           </div>
         );
       })}
 
-      {/* Tooltip */}
-      {hovered && (() => {
-        const pos = toPercent(hovered);
-        const nearTop = pos.top < 18;
-        const nearRight = pos.left > 80;
+      {/* Tooltip — league view only */}
+      {!isEurope && hovered && (() => {
+        const pin = pins.find((p) => p.team.name === hovered);
+        if (!pin) return null;
+        const pos = toPercent(pin.x, pin.y);
+        const nearTop   = pos.top  < 20;
+        const nearRight = pos.left > 78;
+        const isHome = pin.team.name === homeTeam;
+        const isAway = pin.team.name === awayTeam;
         return (
           <div
             className="pointer-events-none absolute z-40 rounded-lg border border-border bg-popover px-3 py-2 text-xs shadow-xl"
             style={{
-              left: nearRight ? "auto" : `${pos.left}%`,
-              right: nearRight ? `${100 - pos.left}%` : "auto",
+              left:      nearRight ? "auto" : `${pos.left}%`,
+              right:     nearRight ? `${100 - pos.left}%` : "auto",
               transform: nearRight ? "none" : "translateX(-50%)",
               ...(nearTop
-                ? { top: `calc(${pos.top}% + 24px)` }
-                : { top: `calc(${pos.top}% - 46px)` }),
+                ? { top: `calc(${pos.top}% + 30px)` }
+                : { top: `calc(${pos.top}% - 52px)` }),
             }}
           >
-            <div className="font-semibold text-foreground whitespace-nowrap">{hovered.team.name}</div>
-            {hovered.team.stadium && (
-              <div className="text-muted-foreground whitespace-nowrap">{hovered.team.stadium}</div>
-            )}
-            {hovered.team.city && (
-              <div className="text-muted-foreground whitespace-nowrap">{hovered.team.city}</div>
-            )}
+            <div className="font-semibold text-foreground">{pin.team.name}</div>
+            {pin.team.stadium && <div className="text-muted-foreground">{pin.team.stadium}</div>}
+            {pin.team.city    && <div className="text-muted-foreground">{pin.team.city}</div>}
             {interactive && (
-              <div className="mt-1 text-primary/80 whitespace-nowrap">
-                {hovered.team.name === homeTeam
-                  ? "← Click to deselect"
-                  : hovered.team.name === awayTeam
-                  ? "← Click to deselect"
+              <div className="mt-1 text-primary/80">
+                {isHome || isAway
+                  ? "Click to deselect"
                   : homeTeam === null
-                  ? "Click to set as Home"
-                  : "Click to set as Away"}
+                  ? "Click → Home team"
+                  : "Click → Away team"}
               </div>
             )}
           </div>
