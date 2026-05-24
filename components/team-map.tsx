@@ -29,54 +29,70 @@ const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
   ligue1:     ligue1Teams     as Record<string, TeamMeta>,
 };
 
-// League cards shown on the Europe overview map instead of individual pins.
-// Clicking a card zooms into that league.
-const LEAGUE_CARDS = [
-  { id: "pl",         flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", name: "Premier League",  lat: 52.5,  lng: -1.5  },
-  { id: "laliga",     flag: "🇪🇸", name: "La Liga",          lat: 40.4,  lng: -3.7  },
-  { id: "bundesliga", flag: "🇩🇪", name: "Bundesliga",       lat: 51.2,  lng: 10.2  },
-  { id: "seriea",     flag: "🇮🇹", name: "Serie A",          lat: 41.9,  lng: 12.5  },
-  { id: "ligue1",     flag: "🇫🇷", name: "Ligue 1",          lat: 46.6,  lng:  2.3  },
-];
+const LEAGUE_NAMES: Record<string, string> = {
+  pl:         "Premier League",
+  laliga:     "La Liga",
+  bundesliga: "Bundesliga",
+  seriea:     "Serie A",
+  ligue1:     "Ligue 1",
+};
 
 type Point = { x: number; y: number };
-type Pin   = { team: TeamMeta; x: number; y: number };
+type Pin   = { team: TeamMeta; leagueId: string; x: number; y: number };
 
 // ─── Lazy map cache ──────────────────────────────────────────────────────────
-// Nothing is computed at module load. Each league's DottedMap is built once,
-// the first time it is needed, then stored here.
 const _mapCache:  Record<string, DottedMap> = {};
 const _pinsCache: Record<string, { pins: Pin[]; bgPoints: Point[] }> = {};
 
 function getLeagueData(league: string): { pins: Pin[]; bgPoints: Point[] } {
   if (_pinsCache[league]) return _pinsCache[league];
-
-  // height: 65 → ~30 % fewer SVG dots than the old height: 90
   const map = new DottedMap({ height: 65, grid: "diagonal", region: REGIONS[league] });
   _mapCache[league] = map;
-
   const bgPoints = map.getPoints();
   const teams = Object.values(ALL_TEAMS[league] ?? {});
   const pins: Pin[] = teams
     .map((team) => {
       if (team.lat == null || team.lng == null) return null;
       const pin = map.getPin({ lat: team.lat, lng: team.lng });
-      return pin ? { team, x: pin.x, y: pin.y } : null;
+      return pin ? { team, leagueId: league, x: pin.x, y: pin.y } : null;
     })
     .filter((p): p is Pin => p !== null);
-
   _pinsCache[league] = { pins, bgPoints };
   return _pinsCache[league];
 }
 
-// Europe background dots only — no team pins at this level.
+// Europe background dots
 let _europePoints: Point[] | null = null;
+function getEuropeMap(): DottedMap {
+  if (_mapCache.europe) return _mapCache.europe;
+  const map = new DottedMap({ height: 65, grid: "diagonal", region: REGIONS.europe });
+  _mapCache.europe = map;
+  _europePoints = map.getPoints();
+  return map;
+}
 function getEuropePoints(): Point[] {
   if (!_europePoints) {
-    const map = new DottedMap({ height: 65, grid: "diagonal", region: REGIONS.europe });
+    const map = getEuropeMap();
     _europePoints = map.getPoints();
   }
   return _europePoints;
+}
+
+// All 142 team pins projected onto the Europe map coordinate space
+let _europePins: Pin[] | null = null;
+function getEuropePins(): Pin[] {
+  if (_europePins) return _europePins;
+  const map = getEuropeMap();
+  const pins: Pin[] = [];
+  for (const leagueId of Object.keys(ALL_TEAMS)) {
+    for (const team of Object.values(ALL_TEAMS[leagueId])) {
+      if (team.lat == null || team.lng == null) continue;
+      const pin = map.getPin({ lat: team.lat, lng: team.lng });
+      if (pin) pins.push({ team, leagueId, x: pin.x, y: pin.y });
+    }
+  }
+  _europePins = pins;
+  return pins;
 }
 
 // ─── ViewBox ─────────────────────────────────────────────────────────────────
@@ -101,6 +117,13 @@ function computeViewBox(points: Point[], extraPts: Point[], targetRatio: number)
   return { minX, minY, VW, VH };
 }
 
+// Collapse all dots into a single SVG path — far fewer DOM nodes than individual <circle> elements.
+function buildDotPath(points: Point[], r: number): string {
+  return points
+    .map(({ x, y }) => `M${x - r},${y}a${r},${r},0,1,0,${r * 2},0a${r},${r},0,1,0,${-r * 2},0`)
+    .join("");
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 interface TeamMapProps {
   league?: string;
@@ -119,28 +142,13 @@ export function TeamMap({
   onLeagueClick,
   interactive = false,
 }: TeamMapProps) {
-  const [hovered, setHovered] = useState<string | null>(null); // team name
+  const [hovered, setHovered] = useState<string | null>(null);
   const isEurope = league === "europe";
 
-  // ── Lazy-compute only the active view ──────────────────────────────────────
   const { pins, bgPoints } = useMemo(() => {
-    if (isEurope) return { pins: [], bgPoints: getEuropePoints() };
+    if (isEurope) return { pins: getEuropePins(), bgPoints: getEuropePoints() };
     return getLeagueData(league);
   }, [league, isEurope]);
-
-  // ── League card positions on the Europe map ────────────────────────────────
-  const leagueCardPositions = useMemo(() => {
-    if (!isEurope) return [];
-    const map = _mapCache.europe ?? (() => {
-      const m = new DottedMap({ height: 65, grid: "diagonal", region: REGIONS.europe });
-      _mapCache.europe = m;
-      return m;
-    })();
-    return LEAGUE_CARDS.map((card) => {
-      const pin = map.getPin({ lat: card.lat, lng: card.lng });
-      return pin ? { ...card, x: pin.x, y: pin.y } : null;
-    }).filter(Boolean) as (typeof LEAGUE_CARDS[0] & { x: number; y: number })[];
-  }, [isEurope]);
 
   const targetRatio = isEurope ? 5 / 4 : 4 / 3;
 
@@ -150,44 +158,36 @@ export function TeamMap({
     [league]
   );
 
+  // Single path string for all background dots — computed once per league
+  const dotPath = useMemo(() => buildDotPath(bgPoints, 0.18), [bgPoints]);
+
   function toPercent(x: number, y: number) {
     return { left: ((x - minX) / VW) * 100, top: ((y - minY) / VH) * 100 };
   }
 
-  // 22 px logos — large enough to actually see and click
-  const PIN_SIZE = 22;
+  // Europe pins are smaller so 142 logos don't crowd each other
+  const PIN_SIZE = isEurope ? 14 : 22;
+
+  const hoveredPin = hovered ? pins.find((p) => p.team.name === hovered) ?? null : null;
+
+  function handleClick(pin: Pin) {
+    if (!interactive) return;
+    if (isEurope) {
+      onLeagueClick?.(pin.leagueId);
+    } else {
+      onTeamClick?.(pin.team.name);
+    }
+  }
 
   return (
     <div className="relative w-full select-none">
-      {/* Dot background */}
+      {/* Dot background — one path node instead of thousands of <circle> nodes */}
       <svg viewBox={`${minX} ${minY} ${VW} ${VH}`} className="w-full h-auto" aria-hidden="true">
-        {bgPoints.map((pt, i) => (
-          <circle key={i} cx={pt.x} cy={pt.y} r={0.28} className="fill-muted-foreground/20" />
-        ))}
+        <path d={dotPath} fill="rgba(148,163,184,0.10)" />
       </svg>
 
-      {/* ── Europe view: 5 large league cards ──────────────────────────────── */}
-      {isEurope && leagueCardPositions.map((card) => {
-        const pos = toPercent(card.x, card.y);
-        const teamCount = Object.keys(ALL_TEAMS[card.id] ?? {}).length;
-        return (
-          <button
-            key={card.id}
-            className="absolute -translate-x-1/2 -translate-y-1/2 group"
-            style={{ left: `${pos.left}%`, top: `${pos.top}%`, zIndex: 20 }}
-            onClick={() => onLeagueClick?.(card.id)}
-          >
-            <div className="flex flex-col items-center gap-1 rounded-xl border border-border/60 bg-card/95 px-3 py-2 shadow-md backdrop-blur transition-all duration-150 group-hover:border-primary/60 group-hover:shadow-lg group-hover:scale-105">
-              <span className="text-xl leading-none">{card.flag}</span>
-              <span className="text-[11px] font-semibold text-foreground leading-tight whitespace-nowrap">{card.name}</span>
-              <span className="text-[9px] text-muted-foreground">{teamCount} clubs</span>
-            </div>
-          </button>
-        );
-      })}
-
-      {/* ── League view: individual team pins ──────────────────────────────── */}
-      {!isEurope && pins.map((pin) => {
+      {/* Team pins */}
+      {pins.map((pin) => {
         const pos = toPercent(pin.x, pin.y);
         const isHome = pin.team.name === homeTeam;
         const isAway = pin.team.name === awayTeam;
@@ -199,20 +199,20 @@ export function TeamMap({
 
         return (
           <div
-            key={pin.team.name}
+            key={`${pin.leagueId}-${pin.team.name}`}
             className={`absolute -translate-x-1/2 -translate-y-1/2 ${interactive ? "cursor-pointer" : "cursor-default"}`}
             style={{
               left: `${pos.left}%`,
               top:  `${pos.top}%`,
               zIndex: isSelected ? 30 : isHov ? 20 : 10,
-              opacity: dimmed ? 0.45 : 1,
-              transition: "opacity 0.15s, transform 0.1s",
+              opacity: dimmed ? 0.35 : 1,
+              transition: "opacity 0.15s",
             }}
             onMouseEnter={() => setHovered(pin.team.name)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() => interactive && onTeamClick?.(pin.team.name)}
+            onClick={() => handleClick(pin)}
           >
-            {/* Hit-area wrapper — larger than the visible circle for easier clicking */}
+            {/* Hit area — larger than the visible logo for easier clicking */}
             <div className="flex items-center justify-center" style={{ width: PIN_SIZE + 14, height: PIN_SIZE + 14 }}>
               <div
                 className={`flex items-center justify-center rounded-full transition-all duration-150 ${
@@ -221,14 +221,14 @@ export function TeamMap({
                     : isAway
                     ? "ring-[3px] ring-orange-500 ring-offset-2 ring-offset-background bg-card shadow-lg"
                     : isHov
-                    ? "ring-2 ring-primary/50 ring-offset-1 ring-offset-background bg-card shadow-md scale-110"
-                    : "bg-card/90 shadow-sm hover:shadow-md"
+                    ? "ring-2 ring-primary/60 ring-offset-1 ring-offset-background bg-card shadow-md"
+                    : "bg-card/80 shadow-sm"
                 }`}
                 style={{
                   width:   PIN_SIZE + 8,
                   height:  PIN_SIZE + 8,
                   padding: 3,
-                  transform: isSelected ? "scale(1.25)" : undefined,
+                  transform: isSelected ? "scale(1.3)" : isHov ? "scale(1.15)" : undefined,
                 }}
               >
                 {src ? (
@@ -253,7 +253,7 @@ export function TeamMap({
               </div>
             </div>
 
-            {/* HOME / AWAY label under selected pins */}
+            {/* HOME / AWAY badge — only for selected pins */}
             {isSelected && (
               <div
                 className={`absolute top-full left-1/2 mt-0.5 -translate-x-1/2 rounded px-1.5 py-px text-[8px] font-bold text-white whitespace-nowrap ${
@@ -267,42 +267,68 @@ export function TeamMap({
         );
       })}
 
-      {/* Tooltip — league view only */}
-      {!isEurope && hovered && (() => {
-        const pin = pins.find((p) => p.team.name === hovered);
-        if (!pin) return null;
-        const pos = toPercent(pin.x, pin.y);
-        const nearTop   = pos.top  < 20;
-        const nearRight = pos.left > 78;
-        const isHome = pin.team.name === homeTeam;
-        const isAway = pin.team.name === awayTeam;
-        return (
-          <div
-            className="pointer-events-none absolute z-40 rounded-lg border border-border bg-popover px-3 py-2 text-xs shadow-xl"
-            style={{
-              left:      nearRight ? "auto" : `${pos.left}%`,
-              right:     nearRight ? `${100 - pos.left}%` : "auto",
-              transform: nearRight ? "none" : "translateX(-50%)",
-              ...(nearTop
-                ? { top: `calc(${pos.top}% + 30px)` }
-                : { top: `calc(${pos.top}% - 52px)` }),
-            }}
-          >
-            <div className="font-semibold text-foreground">{pin.team.name}</div>
-            {pin.team.stadium && <div className="text-muted-foreground">{pin.team.stadium}</div>}
-            {pin.team.city    && <div className="text-muted-foreground">{pin.team.city}</div>}
-            {interactive && (
-              <div className="mt-1 text-primary/80">
-                {isHome || isAway
-                  ? "Click to deselect"
-                  : homeTeam === null
-                  ? "Click → Home team"
-                  : "Click → Away team"}
+      {/* Bottom info bar — replaces floating tooltip; never overlaps pins */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 flex items-center gap-3 rounded-b-lg border-t border-border/30 bg-background/90 px-4 py-2 backdrop-blur transition-opacity duration-150 ${
+          hoveredPin ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        style={{ zIndex: 50 }}
+      >
+        {hoveredPin && (() => {
+          const src = teamLogoSrc(hoveredPin.team);
+          const isHome = hoveredPin.team.name === homeTeam;
+          const isAway = hoveredPin.team.name === awayTeam;
+          return (
+            <>
+              {src && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={src}
+                  alt={hoveredPin.team.name}
+                  width={28}
+                  height={28}
+                  className="object-contain flex-shrink-0"
+                  loading="lazy"
+                />
+              )}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-sm text-foreground truncate">{hoveredPin.team.name}</span>
+                  {(isHome || isAway) && (
+                    <span
+                      className={`shrink-0 rounded px-1.5 py-px text-[9px] font-bold text-white ${
+                        isHome ? "bg-emerald-500" : "bg-orange-500"
+                      }`}
+                    >
+                      {isHome ? "HOME" : "AWAY"}
+                    </span>
+                  )}
+                </div>
+                <div className="text-xs text-muted-foreground truncate">
+                  {[
+                    hoveredPin.team.stadium,
+                    hoveredPin.team.city,
+                    isEurope ? LEAGUE_NAMES[hoveredPin.leagueId] : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </div>
               </div>
-            )}
-          </div>
-        );
-      })()}
+              {interactive && (
+                <span className="shrink-0 text-xs text-primary/70">
+                  {isEurope
+                    ? `Click → ${LEAGUE_NAMES[hoveredPin.leagueId] ?? hoveredPin.leagueId}`
+                    : isHome || isAway
+                    ? "Click to deselect"
+                    : homeTeam === null
+                    ? "Click → Home"
+                    : "Click → Away"}
+                </span>
+              )}
+            </>
+          );
+        })()}
+      </div>
     </div>
   );
 }
