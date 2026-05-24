@@ -1,35 +1,30 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import DottedMap from "dotted-map";
 import { teamLogoSrc } from "@/lib/types";
 import type { TeamMeta } from "@/lib/types";
 
+import countryGeometry from "@/data/country-geometry.json";
 import plTeams from "@/data/pl/teams.json";
 import laligaTeams from "@/data/laliga/teams.json";
 import bundesligaTeams from "@/data/bundesliga/teams.json";
 import serieaTeams from "@/data/seriea/teams.json";
 import ligue1Teams from "@/data/ligue1/teams.json";
 
-// La Liga: mainland-Spain bounds only (Canary Islands excluded)
-const REGIONS: Record<string, { lat: { min: number; max: number }; lng: { min: number; max: number } }> = {
-  pl:         { lat: { min: 50.3, max: 55.3 }, lng: { min: -5.8, max:  3.8 } },
-  laliga:     { lat: { min: 36.0, max: 43.9 }, lng: { min: -9.1, max:  3.2 } },
-  bundesliga: { lat: { min: 47.5, max: 54.8 }, lng: { min:  4.8, max: 15.2 } },
-  seriea:     { lat: { min: 38.5, max: 46.6 }, lng: { min:  6.5, max: 18.8 } },
-  ligue1:     { lat: { min: 41.4, max: 51.2 }, lng: { min: -5.5, max:  9.5 } },
-  europe:     { lat: { min: 36.5, max: 56.0 }, lng: { min: -9.5, max: 19.5 } },
-};
+// ─── Types ───────────────────────────────────────────────────────────────────
+type Ring = [number, number][];
+type GeoPolygon   = { type: "Polygon";      coordinates: Ring[] };
+type GeoMultiPoly = { type: "MultiPolygon"; coordinates: Ring[][] };
+type Geom = GeoPolygon | GeoMultiPoly;
 
-// ISO-3166-1 alpha-3 codes used by DottedMap's countries filter
-const LEAGUE_COUNTRY: Record<string, string> = {
-  pl:         "GBR",
-  laliga:     "ESP",
-  bundesliga: "DEU",
-  seriea:     "ITA",
-  ligue1:     "FRA",
-};
+interface ViewBounds {
+  lngMin: number; lngMax: number;
+  latMin: number; latMax: number;
+}
 
+interface Pin { team: TeamMeta; leagueId: string; sx: number; sy: number }
+
+// ─── Data ────────────────────────────────────────────────────────────────────
 const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
   pl:         plTeams         as Record<string, TeamMeta>,
   laliga:     laligaTeams     as Record<string, TeamMeta>,
@@ -39,130 +34,101 @@ const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
 };
 
 const LEAGUE_NAMES: Record<string, string> = {
-  pl:         "Premier League",
-  laliga:     "La Liga",
-  bundesliga: "Bundesliga",
-  seriea:     "Serie A",
-  ligue1:     "Ligue 1",
+  pl: "Premier League", laliga: "La Liga",
+  bundesliga: "Bundesliga", seriea: "Serie A", ligue1: "Ligue 1",
 };
 
-type Point = { x: number; y: number };
-type Pin   = { team: TeamMeta; leagueId: string; x: number; y: number };
+const LEAGUE_COUNTRY: Record<string, string[]> = {
+  pl:         ["GBR"],
+  laliga:     ["ESP"],
+  bundesliga: ["DEU"],
+  seriea:     ["ITA"],
+  ligue1:     ["FRA"],
+  europe:     ["GBR", "FRA", "DEU", "ITA", "ESP"],
+};
 
-// ─── Dot path builder ────────────────────────────────────────────────────────
-// Collapses N dots into a single SVG path — huge DOM reduction vs <circle> per dot.
-function buildPath(points: Point[], r: number): string {
-  return points
-    .map(({ x, y }) => `M${x - r},${y}a${r},${r},0,1,0,${r * 2},0a${r},${r},0,1,0,${-r * 2},0`)
-    .join("");
+const EUROPE_BOUNDS: ViewBounds = { lngMin: -11, lngMax: 22, latMin: 34.5, latMax: 59 };
+const LEAGUE_BOUNDS: Record<string, ViewBounds> = {
+  pl:         { lngMin: -8,   lngMax: 3,    latMin: 49.5, latMax: 59 },
+  laliga:     { lngMin: -10,  lngMax: 4.5,  latMin: 35.5, latMax: 44.5 },
+  bundesliga: { lngMin: 5.5,  lngMax: 16,   latMin: 46.5, latMax: 55.5 },
+  seriea:     { lngMin: 5.5,  lngMax: 19.5, latMin: 36,   latMax: 47.5 },
+  ligue1:     { lngMin: -6,   lngMax: 10,   latMin: 41,   latMax: 52 },
+};
+
+// ─── Projection (Mercator — matches DottedMap's internal formula) ─────────────
+const merc = (lat: number) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
+const SVG_W = 1000, SVG_H = 1000;
+
+function toSVG(lat: number, lng: number, b: ViewBounds): [number, number] {
+  const x = ((lng - b.lngMin) / (b.lngMax - b.lngMin)) * SVG_W;
+  const y = ((merc(b.latMax) - merc(lat)) / (merc(b.latMax) - merc(b.latMin))) * SVG_H;
+  return [x, y];
 }
 
-// ─── Lazy map cache ──────────────────────────────────────────────────────────
-// Everything is computed on first access and stored; nothing runs at import time.
-
-interface LeagueCacheEntry {
-  map:         DottedMap;
-  bgPath:      string;   // all dots in the league's region (faint background)
-  countryPath: string;   // dots inside the country only (highlighted land mass)
-  pins:        Pin[];
+function geomToPath(geom: Geom, bounds: ViewBounds): string {
+  const rings: Ring[] =
+    geom.type === "Polygon" ? geom.coordinates : geom.coordinates.flatMap((p) => p);
+  return rings.map((ring) =>
+    ring.map(([lng, lat], i) => {
+      const [x, y] = toSVG(lat, lng, bounds);
+      return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join("") + "Z"
+  ).join(" ");
 }
 
-const _leagueCache: Partial<Record<string, LeagueCacheEntry>> = {};
+// Compute a tight viewBox from the path strings with % padding
+function computeViewBox(pathStr: string, padFrac = 0.05): string {
+  const xs: number[] = [], ys: number[] = [];
+  for (const m of pathStr.matchAll(/[ML]([\d.]+),([\d.]+)/g)) {
+    xs.push(Number(m[1])); ys.push(Number(m[2]));
+  }
+  if (!xs.length) return `0 0 ${SVG_W} ${SVG_H}`;
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minY = Math.min(...ys), maxY = Math.max(...ys);
+  const vw = maxX - minX, vh = maxY - minY;
+  const px = vw * padFrac, py = vh * padFrac;
+  return `${(minX - px).toFixed(0)} ${(minY - py).toFixed(0)} ${(vw + 2 * px).toFixed(0)} ${(vh + 2 * py).toFixed(0)}`;
+}
 
-function getLeagueCache(leagueId: string): LeagueCacheEntry {
-  const cached = _leagueCache[leagueId];
-  if (cached) return cached;
+// ─── Module-level cache ───────────────────────────────────────────────────────
+interface CacheEntry { paths: string[]; viewbox: string; pins: Pin[]; bounds: ViewBounds }
+const _cache: Partial<Record<string, CacheEntry>> = {};
 
-  const region  = REGIONS[leagueId];
-  const country = LEAGUE_COUNTRY[leagueId];
+function buildCache(league: string): CacheEntry {
+  if (_cache[league]) return _cache[league]!;
 
-  const map         = new DottedMap({ height: 65, grid: "diagonal", region });
-  const countryMap  = new DottedMap({ height: 65, grid: "diagonal", region, countries: [country] });
+  const bounds = league === "europe" ? EUROPE_BOUNDS : (LEAGUE_BOUNDS[league] ?? EUROPE_BOUNDS);
+  const codes  = LEAGUE_COUNTRY[league] ?? [];
 
-  const bgPath      = buildPath(map.getPoints(), 0.2);
-  const countryPath = buildPath(countryMap.getPoints(), 0.2);
+  const paths = codes.map((code) => {
+    const geom = (countryGeometry as unknown as Record<string, Geom>)[code];
+    return geom ? geomToPath(geom, bounds) : "";
+  });
 
-  const teams = Object.values(ALL_TEAMS[leagueId] ?? {});
-  const pins: Pin[] = teams
-    .map((team) => {
-      if (team.lat == null || team.lng == null) return null;
-      const pin = map.getPin({ lat: team.lat, lng: team.lng });
-      return pin ? { team, leagueId, x: pin.x, y: pin.y } : null;
-    })
-    .filter((p): p is Pin => p !== null);
+  const viewbox = computeViewBox(paths.join(" "));
 
-  const entry: LeagueCacheEntry = { map, bgPath, countryPath, pins };
-  _leagueCache[leagueId] = entry;
+  const leagueIds = league === "europe" ? Object.keys(ALL_TEAMS) : [league];
+  const pins: Pin[] = leagueIds.flatMap((lid) =>
+    Object.values(ALL_TEAMS[lid] ?? {})
+      .filter((t) => t.lat != null && t.lng != null)
+      .map((team) => {
+        const [sx, sy] = toSVG(team.lat!, team.lng!, bounds);
+        return { team, leagueId: lid, sx, sy };
+      })
+  );
+
+  const entry: CacheEntry = { paths, viewbox, pins, bounds };
+  _cache[league] = entry;
   return entry;
 }
 
-// ─── Europe cache ─────────────────────────────────────────────────────────────
-
-interface EuropeCacheEntry {
-  map:          DottedMap;
-  bgPath:       string;                    // all-Europe background dots
-  countryPaths: Record<string, string>;   // per-league country dots
-  pins:         Pin[];                     // all 142 team pins
-}
-
-let _europeCache: EuropeCacheEntry | null = null;
-
-function getEuropeCache(): EuropeCacheEntry {
-  if (_europeCache) return _europeCache;
-
-  const region = REGIONS.europe;
-  const map    = new DottedMap({ height: 65, grid: "diagonal", region });
-  const bgPath = buildPath(map.getPoints(), 0.18);
-
-  const countryPaths: Record<string, string> = {};
-  for (const [leagueId, countryCode] of Object.entries(LEAGUE_COUNTRY)) {
-    const cm = new DottedMap({ height: 65, grid: "diagonal", region, countries: [countryCode] });
-    countryPaths[leagueId] = buildPath(cm.getPoints(), 0.18);
-  }
-
-  const pins: Pin[] = [];
-  for (const leagueId of Object.keys(ALL_TEAMS)) {
-    for (const team of Object.values(ALL_TEAMS[leagueId])) {
-      if (team.lat == null || team.lng == null) continue;
-      const pin = map.getPin({ lat: team.lat, lng: team.lng });
-      if (pin) pins.push({ team, leagueId, x: pin.x, y: pin.y });
-    }
-  }
-
-  _europeCache = { map, bgPath, countryPaths, pins };
-  return _europeCache;
-}
-
-// ─── ViewBox ─────────────────────────────────────────────────────────────────
-
-function computeViewBox(bgPoints: Point[], extraPts: Point[], targetRatio: number) {
-  const all = [...bgPoints, ...extraPts];
-  const PAD = 1.5;
-  let minX = Math.min(...all.map((p) => p.x)) - PAD;
-  let minY = Math.min(...all.map((p) => p.y)) - PAD;
-  let VW   = Math.max(...all.map((p) => p.x)) + PAD - minX;
-  let VH   = Math.max(...all.map((p) => p.y)) + PAD - minY;
-
-  const ratio = VW / VH;
-  if (ratio < targetRatio) {
-    const extra = (VH * targetRatio - VW) / 2;
-    minX -= extra;
-    VW = VH * targetRatio;
-  } else {
-    const extra = (VW / targetRatio - VH) / 2;
-    minY -= extra;
-    VH = VW / targetRatio;
-  }
-  return { minX, minY, VW, VH };
-}
-
 // ─── Component ───────────────────────────────────────────────────────────────
-
 interface TeamMapProps {
   league?: string;
   homeTeam?: string | null;
   awayTeam?: string | null;
-  onTeamClick?: (teamName: string, leagueId?: string) => void;
+  onTeamClick?: (teamName: string) => void;
   onLeagueClick?: (leagueId: string) => void;
   interactive?: boolean;
 }
@@ -178,150 +144,117 @@ export function TeamMap({
   const [hovered, setHovered] = useState<string | null>(null);
   const isEurope = league === "europe";
 
-  // ── Build or retrieve cached data ─────────────────────────────────────────
-  const { bgPath, overlayPaths, pins, rawPoints } = useMemo(() => {
-    if (isEurope) {
-      const c = getEuropeCache();
-      return {
-        bgPath:       c.bgPath,
-        overlayPaths: Object.values(c.countryPaths), // 5 paths, one per country
-        pins:         c.pins,
-        rawPoints:    c.map.getPoints(),
-      };
-    }
-    const c = getLeagueCache(league);
-    return {
-      bgPath:       c.bgPath,
-      overlayPaths: [c.countryPath],
-      pins:         c.pins,
-      rawPoints:    c.map.getPoints(),
-    };
-  }, [league, isEurope]);
+  const { paths, viewbox, pins } = useMemo(() => buildCache(league), [league]);
 
-  const targetRatio = isEurope ? 5 / 4 : 4 / 3;
-  const { minX, minY, VW, VH } = useMemo(
-    () => computeViewBox(rawPoints, pins, targetRatio),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [league]
-  );
-
-  function toPercent(x: number, y: number) {
-    return { left: ((x - minX) / VW) * 100, top: ((y - minY) / VH) * 100 };
-  }
-
-  // League view logos are larger — they're the focus of the map.
-  const PIN_SIZE = isEurope ? 14 : 28;
+  const PIN_R  = isEurope ? 11 : 20; // logo radius in SVG units
+  const RING_R = PIN_R + 5;          // selection ring radius
 
   const hoveredPin = hovered ? pins.find((p) => p.team.name === hovered) ?? null : null;
 
-  function handleClick(pin: Pin) {
-    if (!interactive) return;
-    if (isEurope) {
-      onLeagueClick?.(pin.leagueId);
-    } else {
-      onTeamClick?.(pin.team.name);
-    }
-  }
-
   return (
-    <div className="relative w-full select-none">
-      {/* Dot background — two layers: faint all-region + brighter country shape */}
-      <svg viewBox={`${minX} ${minY} ${VW} ${VH}`} className="w-full h-auto" aria-hidden="true">
-        {/* Faint ocean / non-country dots */}
-        <path d={bgPath} fill="rgba(148,163,184,0.07)" />
-        {/* Country highlight dots — same grid, visually creates country shape */}
-        {overlayPaths.map((path, i) => (
-          <path key={i} d={path} fill="rgba(148,163,184,0.30)" />
+    <div className="relative w-full select-none rounded-xl overflow-hidden border border-border/30">
+      <svg
+        viewBox={viewbox}
+        className="w-full h-auto block"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        {/* Ocean / background */}
+        <rect x="-2000" y="-2000" width="6000" height="6000" fill="hsl(220,22%,8%)" />
+
+        {/* Country fills — solid land mass shapes */}
+        {paths.map((d, i) => (
+          <path
+            key={i}
+            d={d}
+            fill="hsl(214,32%,17%)"
+            stroke="hsl(214,38%,30%)"
+            strokeWidth="4"
+            strokeLinejoin="round"
+          />
         ))}
+
+        {/* Team pins — rendered inside SVG so coordinates always align */}
+        {pins.map((pin) => {
+          const { team, leagueId, sx, sy } = pin;
+          const isHome    = team.name === homeTeam;
+          const isAway    = team.name === awayTeam;
+          const isSelected = isHome || isAway;
+          const isHov     = hovered === team.name;
+          const anySelected = !!(homeTeam || awayTeam);
+          const dimmed    = anySelected && !isSelected && !isHov;
+          const src       = teamLogoSrc(team);
+          const scale     = isSelected ? 1.4 : isHov ? 1.2 : 1;
+          const ringColor = isHome ? "#10b981" : isAway ? "#f97316" : isHov ? "rgba(255,255,255,0.5)" : "none";
+          const ringWidth = isSelected ? 5 : 2.5;
+
+          return (
+            <g
+              key={`${leagueId}-${team.name}`}
+              transform={`translate(${sx},${sy}) scale(${scale})`}
+              style={{
+                cursor: interactive ? "pointer" : "default",
+                opacity: dimmed ? 0.25 : 1,
+                transition: "opacity 0.15s",
+              }}
+              onMouseEnter={() => setHovered(team.name)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => {
+                if (!interactive) return;
+                if (isEurope) onLeagueClick?.(leagueId);
+                else onTeamClick?.(team.name);
+              }}
+            >
+              {/* Background circle for contrast */}
+              <circle cx={0} cy={0} r={PIN_R + 3} fill="hsl(220,22%,12%)" />
+              {/* Selection ring */}
+              {(isSelected || isHov) && (
+                <circle cx={0} cy={0} r={RING_R} fill="none" stroke={ringColor} strokeWidth={ringWidth} />
+              )}
+              {/* Team logo */}
+              {src ? (
+                <image
+                  href={src}
+                  x={-PIN_R}
+                  y={-PIN_R}
+                  width={PIN_R * 2}
+                  height={PIN_R * 2}
+                  preserveAspectRatio="xMidYMid meet"
+                />
+              ) : (
+                <text
+                  x={0} y={0}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fontSize={PIN_R}
+                  fill="hsl(215,80%,70%)"
+                  fontWeight="bold"
+                >
+                  {team.name.slice(0, 2).toUpperCase()}
+                </text>
+              )}
+              {/* HOME / AWAY label */}
+              {isSelected && (
+                <text
+                  x={0}
+                  y={RING_R + 10}
+                  textAnchor="middle"
+                  fontSize={10}
+                  fontWeight="bold"
+                  fill={isHome ? "#10b981" : "#f97316"}
+                >
+                  {isHome ? "HOME" : "AWAY"}
+                </text>
+              )}
+            </g>
+          );
+        })}
       </svg>
 
-      {/* Team pins */}
-      {pins.map((pin) => {
-        const pos      = toPercent(pin.x, pin.y);
-        const isHome   = pin.team.name === homeTeam;
-        const isAway   = pin.team.name === awayTeam;
-        const isSelected = isHome || isAway;
-        const isHov    = hovered === pin.team.name;
-        const anySelected = !!(homeTeam || awayTeam);
-        const dimmed   = anySelected && !isSelected && !isHov;
-        const src      = teamLogoSrc(pin.team);
-
-        return (
-          <div
-            key={`${pin.leagueId}-${pin.team.name}`}
-            className={`absolute -translate-x-1/2 -translate-y-1/2 ${interactive ? "cursor-pointer" : "cursor-default"}`}
-            style={{
-              left: `${pos.left}%`,
-              top:  `${pos.top}%`,
-              zIndex: isSelected ? 30 : isHov ? 20 : 10,
-              opacity: dimmed ? 0.35 : 1,
-              transition: "opacity 0.15s",
-            }}
-            onMouseEnter={() => setHovered(pin.team.name)}
-            onMouseLeave={() => setHovered(null)}
-            onClick={() => handleClick(pin)}
-          >
-            {/* Invisible hit area — larger than logo for easier clicking */}
-            <div className="flex items-center justify-center" style={{ width: PIN_SIZE + 14, height: PIN_SIZE + 14 }}>
-              <div
-                className={`flex items-center justify-center rounded-full transition-all duration-150 ${
-                  isHome
-                    ? "ring-[3px] ring-emerald-500 ring-offset-2 ring-offset-background bg-card shadow-lg"
-                    : isAway
-                    ? "ring-[3px] ring-orange-500 ring-offset-2 ring-offset-background bg-card shadow-lg"
-                    : isHov
-                    ? "ring-2 ring-primary/60 ring-offset-1 ring-offset-background bg-card shadow-md"
-                    : "bg-card/80 shadow-sm"
-                }`}
-                style={{
-                  width:   PIN_SIZE + 8,
-                  height:  PIN_SIZE + 8,
-                  padding: 3,
-                  transform: isSelected ? "scale(1.3)" : isHov ? "scale(1.15)" : undefined,
-                }}
-              >
-                {src ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={src}
-                    alt={pin.team.name}
-                    width={PIN_SIZE}
-                    height={PIN_SIZE}
-                    style={{ width: PIN_SIZE, height: PIN_SIZE }}
-                    className="object-contain"
-                    loading="lazy"
-                  />
-                ) : (
-                  <span
-                    className="flex items-center justify-center rounded-full bg-primary/15 text-[8px] font-bold text-primary"
-                    style={{ width: PIN_SIZE, height: PIN_SIZE }}
-                  >
-                    {pin.team.name.slice(0, 2).toUpperCase()}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* HOME / AWAY badge below selected pins */}
-            {isSelected && (
-              <div
-                className={`absolute top-full left-1/2 mt-0.5 -translate-x-1/2 rounded px-1.5 py-px text-[8px] font-bold text-white whitespace-nowrap ${
-                  isHome ? "bg-emerald-500" : "bg-orange-500"
-                }`}
-              >
-                {isHome ? "HOME" : "AWAY"}
-              </div>
-            )}
-          </div>
-        );
-      })}
-
-      {/* Bottom info bar — replaces floating tooltip; never overlaps pins */}
+      {/* Bottom info bar on hover */}
       <div
-        className={`absolute bottom-0 left-0 right-0 flex items-center gap-3 rounded-b-lg border-t border-border/30 bg-background/90 px-4 py-2 backdrop-blur transition-opacity duration-150 ${
+        className={`absolute bottom-0 left-0 right-0 flex items-center gap-3 border-t border-border/30 bg-background/90 px-4 py-2 backdrop-blur transition-opacity duration-150 ${
           hoveredPin ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
-        style={{ zIndex: 50 }}
       >
         {hoveredPin && (() => {
           const src    = teamLogoSrc(hoveredPin.team);
@@ -331,47 +264,28 @@ export function TeamMap({
             <>
               {src && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={src}
-                  alt={hoveredPin.team.name}
-                  width={28}
-                  height={28}
-                  className="object-contain flex-shrink-0"
-                  loading="lazy"
-                />
+                <img src={src} alt={hoveredPin.team.name} width={28} height={28} className="object-contain flex-shrink-0" loading="lazy" />
               )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-sm text-foreground truncate">{hoveredPin.team.name}</span>
                   {(isHome || isAway) && (
-                    <span
-                      className={`shrink-0 rounded px-1.5 py-px text-[9px] font-bold text-white ${
-                        isHome ? "bg-emerald-500" : "bg-orange-500"
-                      }`}
-                    >
+                    <span className={`shrink-0 rounded px-1.5 py-px text-[9px] font-bold text-white ${isHome ? "bg-emerald-500" : "bg-orange-500"}`}>
                       {isHome ? "HOME" : "AWAY"}
                     </span>
                   )}
                 </div>
                 <div className="text-xs text-muted-foreground truncate">
-                  {[
-                    hoveredPin.team.stadium,
-                    hoveredPin.team.city,
-                    isEurope ? LEAGUE_NAMES[hoveredPin.leagueId] : null,
-                  ]
-                    .filter(Boolean)
-                    .join(" · ")}
+                  {[hoveredPin.team.stadium, hoveredPin.team.city, isEurope ? LEAGUE_NAMES[hoveredPin.leagueId] : null]
+                    .filter(Boolean).join(" · ")}
                 </div>
               </div>
               {interactive && (
                 <span className="shrink-0 text-xs text-primary/70">
                   {isEurope
-                    ? `Click → ${LEAGUE_NAMES[hoveredPin.leagueId] ?? hoveredPin.leagueId}`
-                    : isHome || isAway
-                    ? "Click to deselect"
-                    : homeTeam === null
-                    ? "Click → Home"
-                    : "Click → Away"}
+                    ? `Click → ${LEAGUE_NAMES[hoveredPin.leagueId]}`
+                    : isHome || isAway ? "Click to deselect"
+                    : homeTeam === null ? "Click → Home" : "Click → Away"}
                 </span>
               )}
             </>
