@@ -10,7 +10,7 @@ const HERO_STATS = [
   { value: "5",      label: "leagues covered" },
   { value: "12,428", label: "matches analysed" },
   { value: "45%",    label: "avg test accuracy" },
-  { value: "142",    label: "clubs covered" },
+  { value: "142",    label: "clubs tracked" },
 ];
 
 export default function Home() {

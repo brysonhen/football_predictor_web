@@ -11,12 +11,16 @@ import bundesligaTeams from "@/data/bundesliga/teams.json";
 import serieaTeams from "@/data/seriea/teams.json";
 import ligue1Teams from "@/data/ligue1/teams.json";
 
+// Tighter per-league bounding boxes based on actual team locations.
+// "europe" covers all 5 countries; Las Palmas excluded from the europe bound
+// (still visible on the laliga map which uses lat 27.8 min).
 const REGIONS: Record<string, { lat: { min: number; max: number }; lng: { min: number; max: number } }> = {
-  pl:         { lat: { min: 49.9, max: 55.9 }, lng: { min: -5.8, max:  2.0 } },
-  laliga:     { lat: { min: 27.6, max: 44.1 }, lng: { min: -9.5, max:  4.5 } },
-  bundesliga: { lat: { min: 47.2, max: 55.1 }, lng: { min:  5.8, max: 15.1 } },
-  seriea:     { lat: { min: 37.5, max: 47.1 }, lng: { min:  6.5, max: 18.6 } },
-  ligue1:     { lat: { min: 42.3, max: 51.2 }, lng: { min: -4.8, max:  8.3 } },
+  pl:         { lat: { min: 50.5,  max: 55.2  }, lng: { min: -3.3,  max:  1.6  } },
+  laliga:     { lat: { min: 27.8,  max: 43.7  }, lng: { min: -9.3,  max:  3.2  } },
+  bundesliga: { lat: { min: 47.7,  max: 54.6  }, lng: { min:  6.0,  max: 14.0  } },
+  seriea:     { lat: { min: 38.8,  max: 46.4  }, lng: { min:  7.3,  max: 18.5  } },
+  ligue1:     { lat: { min: 41.6,  max: 50.9  }, lng: { min: -4.8,  max:  9.0  } },
+  europe:     { lat: { min: 36.2,  max: 55.5  }, lng: { min: -9.8,  max: 18.8  } },
 };
 
 const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
@@ -27,7 +31,16 @@ const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
   ligue1:     ligue1Teams     as Record<string, TeamMeta>,
 };
 
-// Pre-compute one DottedMap per league at module load time (lightweight).
+// League accent colours for europe view pins
+const LEAGUE_COLORS: Record<string, string> = {
+  pl:         "#38003c",  // Premier League purple
+  laliga:     "#ee8100",  // La Liga orange
+  bundesliga: "#d20515",  // Bundesliga red
+  seriea:     "#1e4694",  // Serie A blue
+  ligue1:     "#091c3e",  // Ligue 1 navy
+};
+
+// Pre-compute one DottedMap per region at module load time.
 const MAPS: Record<string, DottedMap> = Object.fromEntries(
   Object.entries(REGIONS).map(([id, region]) => [
     id,
@@ -35,11 +48,25 @@ const MAPS: Record<string, DottedMap> = Object.fromEntries(
   ])
 );
 
-type Pin = { team: TeamMeta; x: number; y: number };
+type Pin = { team: TeamMeta; x: number; y: number; league?: string };
 
 function buildPins(league: string): { pins: Pin[]; bgPoints: { x: number; y: number }[] } {
   const map = MAPS[league];
   const bgPoints = map.getPoints();
+
+  if (league === "europe") {
+    // Combine all leagues, tagging each pin with its league for colouring
+    const pins: Pin[] = [];
+    for (const lid of ["pl", "laliga", "bundesliga", "seriea", "ligue1"]) {
+      for (const team of Object.values(ALL_TEAMS[lid])) {
+        if (team.lat == null || team.lng == null) continue;
+        const pin = map.getPin({ lat: team.lat, lng: team.lng });
+        if (pin) pins.push({ team, x: pin.x, y: pin.y, league: lid });
+      }
+    }
+    return { pins, bgPoints };
+  }
+
   const teams = Object.values(ALL_TEAMS[league]);
   const pins: Pin[] = teams
     .map((team) => {
@@ -51,7 +78,7 @@ function buildPins(league: string): { pins: Pin[]; bgPoints: { x: number; y: num
   return { pins, bgPoints };
 }
 
-// Pre-compute per-league pin sets.
+// Pre-compute all pin sets (including europe).
 const LEAGUE_PINS: Record<string, ReturnType<typeof buildPins>> = Object.fromEntries(
   Object.keys(REGIONS).map((id) => [id, buildPins(id)])
 );
@@ -67,10 +94,11 @@ function viewBox(bgPoints: { x: number; y: number }[], pins: Pin[]) {
   return { minX, maxX, minY, maxY, PAD, VW: maxX - minX + PAD * 2, VH: maxY - minY + PAD * 2 };
 }
 
-export function TeamMap({ league = "pl" }: { league?: string }) {
+export function TeamMap({ league = "europe" }: { league?: string }) {
   const [hovered, setHovered] = useState<Pin | null>(null);
 
-  const { pins, bgPoints } = LEAGUE_PINS[league] ?? LEAGUE_PINS.pl;
+  const key = LEAGUE_PINS[league] ? league : "europe";
+  const { pins, bgPoints } = LEAGUE_PINS[key];
   const { minX, minY, PAD, VW, VH } = useMemo(
     () => viewBox(bgPoints, pins),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,6 +111,8 @@ export function TeamMap({ league = "pl" }: { league?: string }) {
       top:  ((pin.y - (minY - PAD)) / VH) * 100,
     };
   }
+
+  const isEurope = key === "europe";
 
   return (
     <div className="relative w-full select-none">
@@ -102,13 +132,16 @@ export function TeamMap({ league = "pl" }: { league?: string }) {
         ))}
       </svg>
 
-      {pins.map((pin) => {
+      {pins.map((pin, idx) => {
         const pos = toPercent(pin);
         const active = hovered?.team.name === pin.team.name;
         const src = teamLogoSrc(pin.team);
+        const accentColor = pin.league ? LEAGUE_COLORS[pin.league] : undefined;
+        // Europe view: smaller pins to avoid crowding
+        const size = isEurope ? 11 : 14;
         return (
           <div
-            key={pin.team.name}
+            key={`${pin.team.name}-${idx}`}
             className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
             style={{ left: `${pos.left}%`, top: `${pos.top}%`, zIndex: active ? 20 : 10 }}
             onMouseEnter={() => setHovered(pin)}
@@ -120,22 +153,23 @@ export function TeamMap({ league = "pl" }: { league?: string }) {
                   ? "scale-[1.7] ring-1 ring-primary ring-offset-1 ring-offset-card bg-card/95 shadow-lg p-[3px]"
                   : "bg-card/80 p-[2px] shadow hover:scale-125 hover:bg-card"
               }`}
+              style={isEurope && accentColor && !active ? { borderBottom: `2px solid ${accentColor}` } : undefined}
             >
               {src ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={src}
                   alt={pin.team.name}
-                  width={14}
-                  height={14}
-                  style={{ width: 14, height: 14 }}
+                  width={size}
+                  height={size}
+                  style={{ width: size, height: size }}
                   className="object-contain"
                   loading="lazy"
                 />
               ) : (
                 <span
                   className="flex items-center justify-center rounded-full bg-primary/20 text-[6px] font-bold text-primary"
-                  style={{ width: 14, height: 14 }}
+                  style={{ width: size, height: size }}
                 >
                   {pin.team.name.slice(0, 2).toUpperCase()}
                 </span>
@@ -161,6 +195,9 @@ export function TeamMap({ league = "pl" }: { league?: string }) {
             <div className="font-semibold text-foreground whitespace-nowrap">{hovered.team.name}</div>
             {hovered.team.stadium && (
               <div className="text-muted-foreground whitespace-nowrap">{hovered.team.stadium}</div>
+            )}
+            {hovered.team.city && (
+              <div className="text-muted-foreground whitespace-nowrap">{hovered.team.city}</div>
             )}
           </div>
         );

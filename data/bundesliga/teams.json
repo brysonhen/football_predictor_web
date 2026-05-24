@@ -2,159 +2,217 @@
   "Augsburg": {
     "name": "Augsburg",
     "stadium": "WWK Arena",
-    "city": "Augsburg, Germany",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/3841.png"
+    "city": "Augsburg",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/3841.png",
+    "lat": 48.3236,
+    "lng": 10.8861
   },
   "Bayern Munich": {
     "name": "Bayern Munich",
     "stadium": "Allianz Arena",
-    "city": "Munich, Germany",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png"
+    "city": "Munich",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png",
+    "lat": 48.2188,
+    "lng": 11.6247
   },
   "Bielefeld": {
     "name": "Bielefeld",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England"
+    "stadium": "Sch\u00fccoArena",
+    "city": "Bielefeld",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/2506.png",
+    "lat": 51.99,
+    "lng": 8.5307
   },
   "Bochum": {
     "name": "Bochum",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/VfL_Bochum_logo.svg/120px-VfL_Bochum_logo.svg.png"
+    "stadium": "Vonovia Ruhrstadion",
+    "city": "Bochum",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/VfL_Bochum_logo.svg/120px-VfL_Bochum_logo.svg.png",
+    "lat": 51.4947,
+    "lng": 7.2362
   },
   "Darmstadt": {
     "name": "Darmstadt",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England"
+    "stadium": "Merck Stadion am B\u00f6llenfalltor",
+    "city": "Darmstadt",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/3812.png",
+    "lat": 49.8591,
+    "lng": 8.645
   },
   "Dortmund": {
     "name": "Dortmund",
     "stadium": "Signal Iduna Park",
-    "city": "Dortmund, Germany",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/124.png"
+    "city": "Dortmund",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/124.png",
+    "lat": 51.4927,
+    "lng": 7.4517
   },
   "Ein Frankfurt": {
     "name": "Ein Frankfurt",
     "stadium": "Deutsche Bank Park",
-    "city": "Frankfurt, Germany",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png"
+    "city": "Frankfurt",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/125.png",
+    "lat": 50.0686,
+    "lng": 8.6455
   },
   "FC Koln": {
     "name": "FC Koln",
-    "stadium": "WWK Arena",
-    "city": "Augsburg, Germany",
-    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/1._FC_Koeln_Logo_2014%E2%80%93.svg/120px-1._FC_Koeln_Logo_2014%E2%80%93.svg.png"
+    "stadium": "RheinEnergieSTADION",
+    "city": "Cologne",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/1._FC_Koeln_Logo_2014%E2%80%93.svg/120px-1._FC_Koeln_Logo_2014%E2%80%93.svg.png",
+    "lat": 50.9333,
+    "lng": 6.875
   },
   "Fortuna Dusseldorf": {
     "name": "Fortuna Dusseldorf",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/120px-Fortuna_D%C3%BCsseldorf.svg.png"
+    "stadium": "Merkur Spiel-Arena",
+    "city": "D\u00fcsseldorf",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/120px-Fortuna_D%C3%BCsseldorf.svg.png",
+    "lat": 51.2733,
+    "lng": 6.7933
   },
   "Freiburg": {
     "name": "Freiburg",
     "stadium": "Europa-Park Stadion",
-    "city": "Freiburg im Breisgau, Baden-W\u00fcrttemberg",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/126.png"
+    "city": "Freiburg",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/126.png",
+    "lat": 47.9879,
+    "lng": 7.8896
   },
   "Greuther Furth": {
     "name": "Greuther Furth",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England"
+    "stadium": "Sportpark Ronhof",
+    "city": "F\u00fcrth",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/3070.png",
+    "lat": 49.4737,
+    "lng": 11.0118
   },
   "Hamburg": {
     "name": "Hamburg",
     "stadium": "Volksparkstadion",
-    "city": "Hamburg, Germany",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/127.png"
+    "city": "Hamburg",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/127.png",
+    "lat": 53.5872,
+    "lng": 9.8985
   },
   "Heidenheim": {
     "name": "Heidenheim",
     "stadium": "Voith-Arena",
-    "city": "Heidenheim, Germany",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/6418.png"
+    "city": "Heidenheim",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/6418.png",
+    "lat": 48.6761,
+    "lng": 10.1547
   },
   "Hertha": {
     "name": "Hertha",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/120px-Hertha_BSC_Logo_2012.svg.png"
+    "stadium": "Olympiastadion",
+    "city": "Berlin",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/120px-Hertha_BSC_Logo_2012.svg.png",
+    "lat": 52.5147,
+    "lng": 13.2394
   },
   "Hoffenheim": {
     "name": "Hoffenheim",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/7911.png"
+    "stadium": "PreZero Arena",
+    "city": "Sinsheim",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/7911.png",
+    "lat": 49.2381,
+    "lng": 8.8914
   },
   "Holstein Kiel": {
     "name": "Holstein Kiel",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Holstein_Kiel_Logo.svg/120px-Holstein_Kiel_Logo.svg.png"
+    "stadium": "Holstein-Stadion",
+    "city": "Kiel",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Holstein_Kiel_Logo.svg/120px-Holstein_Kiel_Logo.svg.png",
+    "lat": 54.3637,
+    "lng": 10.128
   },
   "Leverkusen": {
     "name": "Leverkusen",
     "stadium": "BayArena",
-    "city": "Leverkusen, Germany",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/131.png"
+    "city": "Leverkusen",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/131.png",
+    "lat": 51.0381,
+    "lng": 7.0025
   },
   "M'gladbach": {
     "name": "M'gladbach",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png"
+    "stadium": "Borussia-Park",
+    "city": "M\u00f6nchengladbach",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/268.png",
+    "lat": 51.1747,
+    "lng": 6.3853
   },
   "Mainz": {
     "name": "Mainz",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/2950.png"
+    "stadium": "MEWA Arena",
+    "city": "Mainz",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/2950.png",
+    "lat": 49.9846,
+    "lng": 8.2246
   },
   "Paderborn": {
     "name": "Paderborn",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England"
+    "stadium": "Benteler-Arena",
+    "city": "Paderborn",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/3307.png",
+    "lat": 51.7192,
+    "lng": 8.7424
   },
   "RB Leipzig": {
     "name": "RB Leipzig",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/11420.png"
+    "stadium": "Red Bull Arena",
+    "city": "Leipzig",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/11420.png",
+    "lat": 51.3456,
+    "lng": 12.3483
   },
   "Schalke 04": {
     "name": "Schalke 04",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/FC_Schalke_04_Logo.svg/120px-FC_Schalke_04_Logo.svg.png"
+    "stadium": "Veltins-Arena",
+    "city": "Gelsenkirchen",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/FC_Schalke_04_Logo.svg/120px-FC_Schalke_04_Logo.svg.png",
+    "lat": 51.5547,
+    "lng": 7.0677
   },
   "St Pauli": {
     "name": "St Pauli",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/270.png"
+    "stadium": "Millerntor-Stadion",
+    "city": "Hamburg",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/270.png",
+    "lat": 53.565,
+    "lng": 9.9683
   },
   "Stuttgart": {
     "name": "Stuttgart",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/134.png"
+    "stadium": "MHPArena",
+    "city": "Stuttgart",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/134.png",
+    "lat": 48.7924,
+    "lng": 9.2322
   },
   "Union Berlin": {
     "name": "Union Berlin",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/598.png"
+    "stadium": "Stadion An der Alten F\u00f6rsterei",
+    "city": "Berlin",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/598.png",
+    "lat": 52.4572,
+    "lng": 13.5681
   },
   "Werder Bremen": {
     "name": "Werder Bremen",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/137.png"
+    "stadium": "Weserstadion",
+    "city": "Bremen",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/137.png",
+    "lat": 53.066,
+    "lng": 8.8379
   },
   "Wolfsburg": {
     "name": "Wolfsburg",
-    "stadium": "Emirates Stadium",
-    "city": "Holloway, London, England",
-    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/138.png"
+    "stadium": "Volkswagen Arena",
+    "city": "Wolfsburg",
+    "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/138.png",
+    "lat": 52.4311,
+    "lng": 10.8038
   }
 }

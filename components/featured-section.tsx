@@ -6,6 +6,7 @@ import {
   MapPin,
   BarChart3,
   Layers,
+  Globe,
 } from "lucide-react";
 import { TeamMap } from "@/components/team-map";
 import { AccuracyChart } from "@/components/accuracy-chart";
@@ -38,6 +39,14 @@ const ALL_TEAMS: Record<string, Record<string, TeamMeta>> = {
   ligue1:     ligue1Teams     as Record<string, TeamMeta>,
 };
 
+// Aggregate stats across all 5 leagues
+const TOTAL_CLUBS   = Object.values(ALL_TEAMS).reduce((n, t) => n + Object.keys(t).length, 0);
+const TOTAL_MATCHES = Object.values(ALL_META).reduce((n, m) => n + m.totalMatches, 0);
+const AVG_ACCURACY  = Math.round(
+  Object.values(ALL_META).reduce((n, m) => n + m.metrics.model_accuracy, 0) /
+  Object.values(ALL_META).length * 100
+);
+
 function ResultCrest({ name, league }: { name: string; league: string }) {
   const team = ALL_TEAMS[league]?.[name];
   const src = team ? teamLogoSrc(team) : null;
@@ -56,7 +65,10 @@ function QuadrantHeader({ icon, label }: { icon: React.ReactNode; label: string 
 }
 
 export function FeaturedSection() {
-  const { league } = useLeague();
+  const { league, hasInteracted } = useLeague();
+
+  // Show europe overview until user picks a league; fall back to pl data for stats
+  const mapLeague = hasInteracted ? league : "europe";
   const meta = ALL_META[league] ?? plMeta;
   const recent = meta.recentResults.slice(0, 6);
 
@@ -74,25 +86,41 @@ export function FeaturedSection() {
           </h2>
           <p className="mt-3 text-muted-foreground">
             Five separate logistic regression models — one per league — each
-            trained with strict temporal validation so every prediction uses
-            only what was known before kickoff.
+            trained on historical form data with strict temporal validation so
+            every prediction uses only what was known before kickoff.
           </p>
         </div>
 
         <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-border md:grid-cols-2">
           {/* 1. Stadium map */}
           <div className="border-b border-border bg-card p-6 md:border-r">
-            <QuadrantHeader icon={<MapPin className="h-4 w-4" />} label="Stadium network" />
+            <QuadrantHeader
+              icon={hasInteracted ? <MapPin className="h-4 w-4" /> : <Globe className="h-4 w-4" />}
+              label={hasInteracted ? "Stadium network" : "All 5 leagues"}
+            />
             <h3 className="mt-3 text-xl font-semibold">
-              Every ground, mapped.{" "}
-              <span className="font-normal text-muted-foreground">
-                {meta.teamCount} clubs feed the {meta.leagueName} model.
-              </span>
+              {hasInteracted ? (
+                <>
+                  Every ground, mapped.{" "}
+                  <span className="font-normal text-muted-foreground">
+                    {meta.teamCount} clubs feed the {meta.leagueName} model.
+                  </span>
+                </>
+              ) : (
+                <>
+                  {TOTAL_CLUBS} clubs across Europe.{" "}
+                  <span className="font-normal text-muted-foreground">
+                    Select a league above to zoom in.
+                  </span>
+                </>
+              )}
             </h3>
             <div className="relative mt-4">
-              <TeamMap league={league} />
+              <TeamMap league={mapLeague} />
               <div className="absolute right-2 top-2 rounded-md border border-border bg-background/80 px-2.5 py-1 text-xs font-medium backdrop-blur">
-                {meta.teamCount} clubs · {meta.totalMatches.toLocaleString()} matches
+                {hasInteracted
+                  ? `${meta.teamCount} clubs · ${meta.totalMatches.toLocaleString()} matches`
+                  : `${TOTAL_CLUBS} clubs · ${TOTAL_MATCHES.toLocaleString()} matches`}
               </div>
             </div>
           </div>
@@ -144,10 +172,21 @@ export function FeaturedSection() {
           <div className="border-b border-border bg-card p-6 md:border-r md:border-b-0">
             <QuadrantHeader icon={<Activity className="h-4 w-4" />} label="Model performance" />
             <h3 className="mt-3 text-xl font-semibold">
-              Accuracy through the {formatSeason(meta.testSeasons[0])} season.{" "}
-              <span className="font-normal text-muted-foreground">
-                Tested on a full season the model never saw in training.
-              </span>
+              {hasInteracted ? (
+                <>
+                  Accuracy through the {formatSeason(meta.testSeasons[0])} season.{" "}
+                  <span className="font-normal text-muted-foreground">
+                    Tested on a full season the model never saw in training.
+                  </span>
+                </>
+              ) : (
+                <>
+                  {AVG_ACCURACY}% average accuracy.{" "}
+                  <span className="font-normal text-muted-foreground">
+                    Each model tested on a held-out season it never trained on.
+                  </span>
+                </>
+              )}
             </h3>
             <div className="mt-4">
               <AccuracyChart data={meta.monthlyAccuracy} />
@@ -162,7 +201,7 @@ export function FeaturedSection() {
                 {accuracy}% test accuracy.{" "}
                 <span className="font-normal text-muted-foreground">
                   {improvement}% lower log-loss than a naive majority-class
-                  baseline, across {meta.totalMatches.toLocaleString()} matches.
+                  baseline, across {meta.totalMatches.toLocaleString()} {meta.leagueName} matches.
                 </span>
               </p>
               <div className="mt-auto grid grid-cols-2 gap-2 pt-2">
