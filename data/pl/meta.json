@@ -2,7 +2,7 @@
   "league": "pl",
   "leagueName": "Premier League",
   "country": "England",
-  "lastMatchDate": "2026-05-19",
+  "lastMatchDate": "2026-05-24",
   "trainSeasons": [
     "1920",
     "2021",
@@ -15,26 +15,26 @@
     "2526"
   ],
   "metrics": {
-    "dummy_log_loss": 1.0858,
-    "form_log_loss": 1.1041,
-    "model_log_loss": 1.041,
-    "model_accuracy": 0.4694
+    "dummy_log_loss": 1.0863,
+    "form_log_loss": 1.1018,
+    "model_log_loss": 1.0449,
+    "model_accuracy": 0.4622
   },
   "confusionMatrix": [
     [
-      115,
+      116,
       0,
-      38
+      41
     ],
     [
-      62,
+      64,
       0,
-      36
+      37
     ],
     [
-      55,
+      57,
       0,
-      54
+      55
     ]
   ],
   "monthlyAccuracy": [
@@ -85,84 +85,84 @@
     },
     {
       "month": "2026-05",
-      "accuracy": 0.419,
-      "matches": 31
+      "accuracy": 0.366,
+      "matches": 41
     }
   ],
   "recentResults": [
     {
-      "date": "2026-05-19",
-      "home": "Chelsea",
-      "away": "Tottenham",
-      "fthg": 2,
-      "ftag": 1,
-      "ftr": "H",
-      "season": "2526"
-    },
-    {
-      "date": "2026-05-19",
-      "home": "Bournemouth",
-      "away": "Man City",
-      "fthg": 1,
-      "ftag": 1,
-      "ftr": "D",
-      "season": "2526"
-    },
-    {
-      "date": "2026-05-18",
-      "home": "Arsenal",
-      "away": "Burnley",
-      "fthg": 1,
+      "date": "2026-05-24",
+      "home": "West Ham",
+      "away": "Leeds",
+      "fthg": 3,
       "ftag": 0,
       "ftr": "H",
       "season": "2526"
     },
     {
-      "date": "2026-05-17",
-      "home": "Everton",
-      "away": "Sunderland",
-      "fthg": 1,
+      "date": "2026-05-24",
+      "home": "Fulham",
+      "away": "Newcastle",
+      "fthg": 2,
+      "ftag": 0,
+      "ftr": "H",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-24",
+      "home": "Brighton",
+      "away": "Man United",
+      "fthg": 0,
       "ftag": 3,
       "ftr": "A",
       "season": "2526"
     },
     {
-      "date": "2026-05-17",
-      "home": "Man United",
-      "away": "Nott'm Forest",
-      "fthg": 3,
-      "ftag": 2,
-      "ftr": "H",
-      "season": "2526"
-    },
-    {
-      "date": "2026-05-17",
-      "home": "Brentford",
-      "away": "Crystal Palace",
-      "fthg": 2,
-      "ftag": 2,
+      "date": "2026-05-24",
+      "home": "Burnley",
+      "away": "Wolves",
+      "fthg": 1,
+      "ftag": 1,
       "ftr": "D",
       "season": "2526"
     },
     {
-      "date": "2026-05-17",
-      "home": "Newcastle",
-      "away": "West Ham",
-      "fthg": 3,
-      "ftag": 1,
-      "ftr": "H",
+      "date": "2026-05-24",
+      "home": "Crystal Palace",
+      "away": "Arsenal",
+      "fthg": 1,
+      "ftag": 2,
+      "ftr": "A",
       "season": "2526"
     },
     {
-      "date": "2026-05-17",
-      "home": "Leeds",
-      "away": "Brighton",
+      "date": "2026-05-24",
+      "home": "Tottenham",
+      "away": "Everton",
       "fthg": 1,
       "ftag": 0,
       "ftr": "H",
       "season": "2526"
+    },
+    {
+      "date": "2026-05-24",
+      "home": "Liverpool",
+      "away": "Brentford",
+      "fthg": 1,
+      "ftag": 1,
+      "ftr": "D",
+      "season": "2526"
+    },
+    {
+      "date": "2026-05-24",
+      "home": "Sunderland",
+      "away": "Chelsea",
+      "fthg": 2,
+      "ftag": 1,
+      "ftr": "H",
+      "season": "2526"
     }
   ],
-  "totalMatches": 2650,
+  "totalMatches": 2660,
   "teamCount": 28
 }

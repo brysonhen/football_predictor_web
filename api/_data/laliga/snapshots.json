@@ -2,127 +2,127 @@
   "Ath Bilbao": {
     "ppg_l5": 0.8,
     "gf_l5": 1.4,
-    "ga_l5": 1.8,
-    "gd_l5": -0.4,
+    "ga_l5": 2.0,
+    "gd_l5": -0.6,
     "ppg_l10": 1.0,
-    "gf_l10": 1.1,
-    "ga_l10": 1.7,
-    "gd_l10": -0.6,
-    "rest_days": 1,
+    "gf_l10": 1.3,
+    "ga_l10": 1.8,
+    "gd_l10": -0.5,
+    "rest_days": 2,
     "recent_form": [
-      "L",
       "W",
       "L",
       "L",
-      "D"
+      "D",
+      "L"
     ]
   },
   "Barcelona": {
-    "ppg_l5": 2.4,
-    "gf_l5": 1.8,
-    "ga_l5": 0.6,
-    "gd_l5": 1.2,
-    "ppg_l10": 2.7,
-    "gf_l10": 2.2,
-    "ga_l10": 0.7,
-    "gd_l10": 1.5,
-    "rest_days": 1,
+    "ppg_l5": 1.8,
+    "gf_l5": 1.6,
+    "ga_l5": 1.2,
+    "gd_l5": 0.4,
+    "ppg_l10": 2.4,
+    "gf_l10": 1.8,
+    "ga_l10": 0.8,
+    "gd_l10": 1.0,
+    "rest_days": 2,
     "recent_form": [
       "W",
       "W",
-      "W",
       "L",
-      "W"
+      "W",
+      "L"
     ]
   },
   "Celta": {
-    "ppg_l5": 1.4,
+    "ppg_l5": 2.0,
     "gf_l5": 1.6,
-    "ga_l5": 1.4,
-    "gd_l5": 0.2,
-    "ppg_l10": 1.1,
+    "ga_l5": 1.0,
+    "gd_l5": 0.6,
+    "ppg_l10": 1.3,
     "gf_l10": 1.5,
-    "ga_l10": 1.8,
-    "gd_l10": -0.3,
-    "rest_days": 1,
+    "ga_l10": 1.7,
+    "gd_l10": -0.2,
+    "rest_days": 2,
     "recent_form": [
-      "L",
       "W",
       "W",
       "L",
-      "D"
+      "D",
+      "W"
     ]
   },
   "Real Madrid": {
-    "ppg_l5": 2.0,
-    "gf_l5": 1.2,
-    "ga_l5": 0.6,
-    "gd_l5": 0.6,
+    "ppg_l5": 2.4,
+    "gf_l5": 1.8,
+    "ga_l5": 0.8,
+    "gd_l5": 1.0,
     "ppg_l10": 2.0,
     "gf_l10": 1.7,
-    "ga_l10": 1.0,
-    "gd_l10": 0.7,
-    "rest_days": 1,
+    "ga_l10": 1.1,
+    "gd_l10": 0.6,
+    "rest_days": 2,
     "recent_form": [
-      "D",
       "W",
       "L",
+      "W",
       "W",
       "W"
     ]
   },
   "Valencia": {
     "ppg_l5": 2.0,
-    "gf_l5": 1.6,
+    "gf_l5": 1.8,
     "ga_l5": 1.4,
-    "gd_l5": 0.2,
-    "ppg_l10": 1.4,
-    "gf_l10": 1.3,
+    "gd_l5": 0.4,
+    "ppg_l10": 1.7,
+    "gf_l10": 1.6,
     "ga_l10": 1.3,
-    "gd_l10": 0.0,
-    "rest_days": 1,
+    "gd_l10": 0.3,
+    "rest_days": 2,
     "recent_form": [
-      "W",
       "L",
       "W",
       "D",
+      "W",
       "W"
     ]
   },
   "Sociedad": {
     "ppg_l5": 0.6,
-    "gf_l5": 1.8,
-    "ga_l5": 2.2,
+    "gf_l5": 1.4,
+    "ga_l5": 1.8,
     "gd_l5": -0.4,
-    "ppg_l10": 1.0,
-    "gf_l10": 1.8,
+    "ppg_l10": 0.8,
+    "gf_l10": 1.6,
     "ga_l10": 1.9,
-    "gd_l10": -0.1,
-    "rest_days": 1,
+    "gd_l10": -0.3,
+    "rest_days": 2,
     "recent_form": [
-      "D",
       "L",
       "D",
       "D",
-      "L"
+      "L",
+      "D"
     ]
   },
   "Mallorca": {
-    "ppg_l5": 0.8,
-    "gf_l5": 0.8,
-    "ga_l5": 1.6,
-    "gd_l5": -0.8,
+    "ppg_l5": 1.4,
+    "gf_l5": 1.2,
+    "ga_l5": 1.2,
+    "gd_l5": 0.0,
     "ppg_l10": 1.4,
-    "gf_l10": 1.3,
-    "ga_l10": 1.3,
-    "gd_l10": 0.0,
-    "rest_days": 1,
+    "gf_l10": 1.4,
+    "ga_l10": 1.2,
+    "gd_l10": 0.2,
+    "rest_days": 2,
     "recent_form": [
-      "L",
       "W",
       "D",
       "L",
-      "L"
+      "L",
+      "W"
     ]
   },
   "Eibar": {
@@ -134,7 +134,7 @@
     "gf_l10": 0.7,
     "ga_l10": 1.9,
     "gd_l10": -1.2,
-    "rest_days": 1822,
+    "rest_days": 1829,
     "recent_form": [
       "W",
       "W",
@@ -152,7 +152,7 @@
     "gf_l10": 1.3,
     "ga_l10": 1.3,
     "gd_l10": 0.0,
-    "rest_days": 359,
+    "rest_days": 366,
     "recent_form": [
       "D",
       "W",
@@ -162,17 +162,17 @@
     ]
   },
   "Osasuna": {
-    "ppg_l5": 0.6,
-    "gf_l5": 1.4,
+    "ppg_l5": 0.0,
+    "gf_l5": 1.0,
     "ga_l5": 2.0,
-    "gd_l5": -0.6,
+    "gd_l5": -1.0,
     "ppg_l10": 0.8,
-    "gf_l10": 1.2,
-    "ga_l10": 1.7,
-    "gd_l10": -0.5,
-    "rest_days": 1,
+    "gf_l10": 1.1,
+    "ga_l10": 1.5,
+    "gd_l10": -0.4,
+    "rest_days": 2,
     "recent_form": [
-      "W",
+      "L",
       "L",
       "L",
       "L",
@@ -181,20 +181,20 @@
   },
   "Villarreal": {
     "ppg_l5": 1.4,
-    "gf_l5": 2.0,
+    "gf_l5": 2.6,
     "ga_l5": 1.6,
-    "gd_l5": 0.4,
-    "ppg_l10": 1.5,
-    "gf_l10": 1.7,
+    "gd_l5": 1.0,
+    "ppg_l10": 1.7,
+    "gf_l10": 2.1,
     "ga_l10": 1.3,
-    "gd_l10": 0.4,
+    "gd_l10": 0.8,
     "rest_days": 1,
     "recent_form": [
       "W",
-      "W",
       "D",
       "L",
-      "L"
+      "L",
+      "W"
     ]
   },
   "Granada": {
@@ -206,7 +206,7 @@
     "gf_l10": 0.8,
     "ga_l10": 2.1,
     "gd_l10": -1.3,
-    "rest_days": 724,
+    "rest_days": 731,
     "recent_form": [
       "L",
       "L",
@@ -216,21 +216,21 @@
     ]
   },
   "Betis": {
-    "ppg_l5": 1.6,
-    "gf_l5": 1.8,
+    "ppg_l5": 2.0,
+    "gf_l5": 2.0,
     "ga_l5": 1.4,
-    "gd_l5": 0.4,
-    "ppg_l10": 1.4,
-    "gf_l10": 1.5,
+    "gd_l5": 0.6,
+    "ppg_l10": 1.6,
+    "gf_l10": 1.6,
     "ga_l10": 1.3,
-    "gd_l10": 0.2,
-    "rest_days": 1,
+    "gd_l10": 0.3,
+    "rest_days": 2,
     "recent_form": [
-      "D",
       "W",
       "D",
       "W",
-      "L"
+      "L",
+      "W"
     ]
   },
   "Valladolid": {
@@ -242,7 +242,7 @@
     "gf_l10": 0.8,
     "ga_l10": 2.7,
     "gd_l10": -1.9,
-    "rest_days": 359,
+    "rest_days": 366,
     "recent_form": [
       "L",
       "L",
@@ -252,110 +252,110 @@
     ]
   },
   "Ath Madrid": {
-    "ppg_l5": 2.4,
-    "gf_l5": 1.6,
-    "ga_l5": 0.8,
-    "gd_l5": 0.8,
-    "ppg_l10": 1.5,
+    "ppg_l5": 1.8,
+    "gf_l5": 1.2,
+    "ga_l5": 1.4,
+    "gd_l5": -0.2,
+    "ppg_l10": 1.2,
     "gf_l10": 1.5,
-    "ga_l10": 1.4,
-    "gd_l10": 0.1,
+    "ga_l10": 1.9,
+    "gd_l10": -0.4,
     "rest_days": 1,
     "recent_form": [
       "W",
-      "W",
       "L",
       "W",
-      "W"
-    ]
-  },
-  "Getafe": {
-    "ppg_l5": 0.8,
-    "gf_l5": 0.6,
-    "ga_l5": 1.2,
-    "gd_l5": -0.6,
-    "ppg_l10": 1.3,
-    "gf_l10": 0.8,
-    "ga_l10": 0.9,
-    "gd_l10": -0.1,
-    "rest_days": 1,
-    "recent_form": [
-      "L",
-      "L",
-      "D",
       "W",
       "L"
     ]
   },
-  "Alaves": {
-    "ppg_l5": 2.0,
-    "gf_l5": 1.4,
-    "ga_l5": 1.2,
-    "gd_l5": 0.2,
+  "Getafe": {
+    "ppg_l5": 1.4,
+    "gf_l5": 0.8,
+    "ga_l5": 0.8,
+    "gd_l5": 0.0,
     "ppg_l10": 1.6,
-    "gf_l10": 1.8,
-    "ga_l10": 1.7,
+    "gf_l10": 0.9,
+    "ga_l10": 0.8,
     "gd_l10": 0.1,
-    "rest_days": 1,
+    "rest_days": 2,
     "recent_form": [
-      "W",
       "L",
       "D",
       "W",
+      "L",
       "W"
     ]
   },
-  "Levante": {
-    "ppg_l5": 2.0,
-    "gf_l5": 1.8,
-    "ga_l5": 1.8,
-    "gd_l5": 0.0,
-    "ppg_l10": 2.0,
-    "gf_l10": 1.7,
-    "ga_l10": 1.4,
-    "gd_l10": 0.3,
-    "rest_days": 1,
+  "Alaves": {
+    "ppg_l5": 1.4,
+    "gf_l5": 1.2,
+    "ga_l5": 1.4,
+    "gd_l5": -0.2,
+    "ppg_l10": 1.5,
+    "gf_l10": 1.8,
+    "ga_l10": 1.8,
+    "gd_l10": 0.0,
+    "rest_days": 2,
     "recent_form": [
+      "L",
       "D",
+      "W",
+      "W",
+      "L"
+    ]
+  },
+  "Levante": {
+    "ppg_l5": 1.8,
+    "gf_l5": 2.0,
+    "ga_l5": 2.2,
+    "gd_l5": -0.2,
+    "ppg_l10": 1.9,
+    "gf_l10": 1.7,
+    "ga_l10": 1.5,
+    "gd_l10": 0.2,
+    "rest_days": 2,
+    "recent_form": [
       "L",
       "W",
       "W",
-      "W"
+      "W",
+      "L"
     ]
   },
   "Espanol": {
     "ppg_l5": 1.4,
-    "gf_l5": 1.0,
-    "ga_l5": 1.0,
+    "gf_l5": 1.2,
+    "ga_l5": 1.2,
     "gd_l5": 0.0,
-    "ppg_l10": 0.8,
+    "ppg_l10": 0.9,
     "gf_l10": 0.8,
-    "ga_l10": 1.4,
-    "gd_l10": -0.6,
-    "rest_days": 1,
+    "ga_l10": 1.3,
+    "gd_l10": -0.5,
+    "rest_days": 2,
     "recent_form": [
-      "D",
       "L",
       "L",
       "W",
-      "W"
+      "W",
+      "D"
     ]
   },
   "Sevilla": {
     "ppg_l5": 1.8,
-    "gf_l5": 1.4,
-    "ga_l5": 1.2,
+    "gf_l5": 1.2,
+    "ga_l5": 1.0,
     "gd_l5": 0.2,
     "ppg_l10": 1.2,
-    "gf_l10": 1.1,
-    "ga_l10": 1.7,
-    "gd_l10": -0.6,
-    "rest_days": 1,
+    "gf_l10": 0.9,
+    "ga_l10": 1.3,
+    "gd_l10": -0.4,
+    "rest_days": 2,
     "recent_form": [
+      "W",
+      "W",
+      "W",
       "L",
-      "W",
-      "W",
-      "W",
       "L"
     ]
   },
@@ -368,7 +368,7 @@
     "gf_l10": 0.6,
     "ga_l10": 1.7,
     "gd_l10": -1.1,
-    "rest_days": 723,
+    "rest_days": 730,
     "recent_form": [
       "L",
       "W",
@@ -386,7 +386,7 @@
     "gf_l10": 0.8,
     "ga_l10": 0.9,
     "gd_l10": -0.1,
-    "rest_days": 1822,
+    "rest_days": 1829,
     "recent_form": [
       "W",
       "L",
@@ -396,57 +396,39 @@
     ]
   },
   "Elche": {
-    "ppg_l5": 1.4,
-    "gf_l5": 1.2,
+    "ppg_l5": 1.0,
+    "gf_l5": 1.0,
     "ga_l5": 1.4,
-    "gd_l5": -0.2,
-    "ppg_l10": 1.6,
+    "gd_l5": -0.4,
+    "ppg_l10": 1.7,
     "gf_l10": 1.3,
-    "ga_l10": 1.5,
-    "gd_l10": -0.2,
-    "rest_days": 1,
+    "ga_l10": 1.2,
+    "gd_l10": 0.1,
+    "rest_days": 2,
     "recent_form": [
-      "W",
       "L",
       "D",
       "L",
-      "W"
+      "W",
+      "D"
     ]
   },
   "Vallecano": {
-    "ppg_l5": 1.8,
-    "gf_l5": 1.8,
-    "ga_l5": 1.0,
-    "gd_l5": 0.8,
-    "ppg_l10": 1.6,
-    "gf_l10": 1.2,
+    "ppg_l5": 2.2,
+    "gf_l5": 1.6,
+    "ga_l5": 0.6,
+    "gd_l5": 1.0,
+    "ppg_l10": 1.8,
+    "gf_l10": 1.3,
     "ga_l10": 1.0,
-    "gd_l10": 0.2,
-    "rest_days": 1,
+    "gd_l10": 0.3,
+    "rest_days": 2,
     "recent_form": [
-      "D",
       "W",
       "D",
       "D",
+      "W",
       "W"
-    ]
-  },
-  "Girona": {
-    "ppg_l5": 0.4,
-    "gf_l5": 0.6,
-    "ga_l5": 1.2,
-    "gd_l5": -0.6,
-    "ppg_l10": 0.9,
-    "gf_l10": 1.0,
-    "ga_l10": 1.1,
-    "gd_l10": -0.1,
-    "rest_days": 1,
-    "recent_form": [
-      "L",
-      "L",
-      "D",
-      "D",
-      "L"
     ]
   },
   "Almeria": {
@@ -458,13 +440,31 @@
     "gf_l10": 1.6,
     "ga_l10": 1.8,
     "gd_l10": -0.2,
-    "rest_days": 723,
+    "rest_days": 730,
     "recent_form": [
       "W",
       "L",
       "L",
       "D",
       "W"
+    ]
+  },
+  "Girona": {
+    "ppg_l5": 0.6,
+    "gf_l5": 0.6,
+    "ga_l5": 1.0,
+    "gd_l5": -0.4,
+    "ppg_l10": 0.7,
+    "gf_l10": 0.8,
+    "ga_l10": 1.2,
+    "gd_l10": -0.4,
+    "rest_days": 2,
+    "recent_form": [
+      "L",
+      "D",
+      "D",
+      "L",
+      "D"
     ]
   },
   "Las Palmas": {
@@ -476,7 +476,7 @@
     "gf_l10": 0.8,
     "ga_l10": 1.4,
     "gd_l10": -0.6,
-    "rest_days": 359,
+    "rest_days": 366,
     "recent_form": [
       "L",
       "L",
@@ -487,18 +487,18 @@
   },
   "Oviedo": {
     "ppg_l5": 0.2,
-    "gf_l5": 0.2,
-    "ga_l5": 1.6,
-    "gd_l5": -1.4,
-    "ppg_l10": 1.1,
-    "gf_l10": 0.9,
-    "ga_l10": 1.3,
-    "gd_l10": -0.4,
-    "rest_days": 1,
+    "gf_l5": 0.0,
+    "ga_l5": 1.8,
+    "gd_l5": -1.8,
+    "ppg_l10": 0.8,
+    "gf_l10": 0.8,
+    "ga_l10": 1.6,
+    "gd_l10": -0.8,
+    "rest_days": 2,
     "recent_form": [
       "L",
-      "L",
       "D",
+      "L",
       "L",
       "L"
     ]
