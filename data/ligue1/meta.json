@@ -15,10 +15,10 @@
     "2526"
   ],
   "metrics": {
-    "dummy_log_loss": 1.0649,
-    "form_log_loss": 1.1023,
-    "model_log_loss": 1.046,
-    "model_accuracy": 0.4542
+    "dummy_log_loss": 1.0661,
+    "form_log_loss": 1.1033,
+    "model_log_loss": 1.047,
+    "model_accuracy": 0.4527
   },
   "confusionMatrix": [
     [
@@ -27,7 +27,7 @@
       43
     ],
     [
-      43,
+      44,
       0,
       29
     ],
@@ -85,8 +85,8 @@
     },
     {
       "month": "2026-05",
-      "accuracy": 0.393,
-      "matches": 28
+      "accuracy": 0.379,
+      "matches": 29
     }
   ],
   "recentResults": [
@@ -101,10 +101,10 @@
     },
     {
       "date": "2026-05-17",
-      "home": "Lorient",
-      "away": "Le Havre",
+      "home": "Lyon",
+      "away": "Lens",
       "fthg": 0,
-      "ftag": 2,
+      "ftag": 4,
       "ftr": "A",
       "season": "2526"
     },
@@ -128,29 +128,20 @@
     },
     {
       "date": "2026-05-17",
-      "home": "Paris FC",
-      "away": "Paris SG",
-      "fthg": 2,
-      "ftag": 1,
-      "ftr": "H",
-      "season": "2526"
-    },
-    {
-      "date": "2026-05-17",
-      "home": "Lyon",
-      "away": "Lens",
+      "home": "Lorient",
+      "away": "Le Havre",
       "fthg": 0,
-      "ftag": 4,
+      "ftag": 2,
       "ftr": "A",
       "season": "2526"
     },
     {
       "date": "2026-05-17",
-      "home": "Nice",
-      "away": "Metz",
-      "fthg": 0,
-      "ftag": 0,
-      "ftr": "D",
+      "home": "Paris FC",
+      "away": "Paris SG",
+      "fthg": 2,
+      "ftag": 1,
+      "ftr": "H",
       "season": "2526"
     },
     {
@@ -161,8 +152,17 @@
       "ftag": 1,
       "ftr": "H",
       "season": "2526"
+    },
+    {
+      "date": "2026-05-17",
+      "home": "Nice",
+      "away": "Metz",
+      "fthg": 0,
+      "ftag": 0,
+      "ftr": "D",
+      "season": "2526"
     }
   ],
-  "totalMatches": 2336,
+  "totalMatches": 2337,
   "teamCount": 28
 }
